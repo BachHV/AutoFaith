@@ -7,23 +7,28 @@ from typing import Protocol, Sequence, TypeVar
 
 
 class NodeCategory(Enum):
-    DEFINITION = 1
-    THEOREM = 2
+    DEFINITION = "DEFINITION"
+    THEOREM = "THEOREM"
+    AXIOM = "AXIOM"
 
 
-class EdgeType(Enum):
-    STATEMENT_USES = 1
-    PROOF_USES = 2
-    REQUIRES = 3
-    DEFINES_AS = 4
+class EdgeType(str, Enum):
+    STATEMENT_USES = "STATEMENT_USES"
+    PROOF_USES = "PROOF_USES"
+    REQUIRES = "REQUIRES"
+    DEFINES_AS = "DEFINES_AS"
 
 
 @dataclass(frozen=True)
 class NLNode:
     id: int
     category: NodeCategory
+    name : str
     statement: str
+    depth : int
     proof: str | None = None
+    evidence: str | None = None
+   
 
 
 @dataclass(frozen=True)
@@ -31,6 +36,9 @@ class NLEdge:
     source: NLNode
     target: NLNode
     type: EdgeType
+    evidence: str | None = None
+    explicit: bool = True
+    confidence: float = 1.0
 
 
 @dataclass(frozen=True)
@@ -47,6 +55,7 @@ class FLEdge:
     source: FLNode
     target: FLNode
     type: EdgeType
+    
 
 
 class NodeLike(Protocol):
@@ -177,17 +186,6 @@ def find_dependencies_for_FL(node : FLNode, graph : tuple[list[FLNode], list[FLE
         if edge.source == node:
             dependencies.append(edge.target)
     return dependencies
-
-
-def create_NL_graph(NL_proof : str) -> tuple[list[NLNode], list[NLEdge]]:
-    # USING LLM judge for enriching the graph
-    pass
-
-def create_FL_graph(FL_proof : str) -> tuple[list[FLNode], list[FLEdge]]:
-    # USING LLM judge for enriching the FL graph
-    pass
-
-
 
 
 
