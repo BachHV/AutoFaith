@@ -12,9 +12,10 @@ class NodeCategory(Enum):
 
 
 class EdgeType(Enum):
-    USES = 1
-    REQUIRES = 2
-    DEFINES_AS = 3
+    STATEMENT_USES = 1
+    PROOF_USES = 2
+    REQUIRES = 3
+    DEFINES_AS = 4
 
 
 @dataclass(frozen=True)
