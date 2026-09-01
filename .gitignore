@@ -1,2 +1,3 @@
 .opam/
 .vscode/
+__pycache__/
