@@ -1,9 +1,10 @@
 
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from enum import Enum
 import heapq
-from typing import Protocol, Sequence, TypeVar
+from typing import Protocol, Sequence, TypeVar, Any
+import json
 
 
 class NodeCategory(Enum):
@@ -81,8 +82,67 @@ class FLEdge:
     target: FLNode
     type: EdgeType
     
+
+
+@dataclass(frozen=True)
+class FLGraph:
+    root_id: int
+    nodes: list[FLNode]
+    edges: list[FLEdge]
     
 
+
+
+@dataclass
+class NLGraph:
+    root_id: int
+    nodes: list[NLNode]
+    edges: list[NLEdge]
+
+    def node_by_id(self, node_id: int) -> NLNode:
+        for node in self.nodes:
+            if node.id == node_id:
+                return node
+        raise KeyError(node_id)
+
+    def dependencies_of(self, node: NLNode) -> list[NLNode]:
+        """Return immediate outgoing dependency targets."""
+        target_ids = {
+            edge.target
+            for edge in self.edges
+            if edge.source == node.id
+        }
+        return [
+            candidate
+            for candidate in self.nodes
+            if candidate.id in target_ids
+        ]
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "root_id": self.root_id,
+            "nodes": [
+                {
+                    **asdict(node),
+                    "category": node.category.value,
+                }
+                for node in self.nodes
+            ],
+            "edges": [
+                {
+                    **asdict(edge),
+                    "type": edge.type.value,
+                }
+                for edge in self.edges
+            ],
+        }
+
+    def to_json(self, indent: int = 2) -> str:
+        return json.dumps(
+            self.to_dict(),
+            ensure_ascii=False,
+            indent=indent,
+        )
 
 class NodeLike(Protocol):
     id: int

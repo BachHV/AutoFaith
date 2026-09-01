@@ -6,66 +6,25 @@ import argparse
 import json
 import os
 import re
+import sys
 from dataclasses import asdict, dataclass
 from enum import Enum
 from pathlib import Path
 from typing import Any
 
 from openai import OpenAI
-from .build_graph import NLNode, NLEdge, FLNode, FLEdge, NodeCategory, EdgeType
+
+if __package__ in (None, ""):
+    project_root = Path(__file__).resolve().parents[2]
+    if str(project_root) not in sys.path:
+        sys.path.insert(0, str(project_root))
+    from faithful_metric.graph.build_graph import NLNode, NLEdge, FLNode, FLEdge, NodeCategory, EdgeType
+else:
+    from .build_graph import NLGraph, NLNode, NLEdge, NodeCategory, EdgeType
 
 model_name = "gpt-5.2"
 
-@dataclass
-class NLGraph:
-    root_id: int
-    nodes: list[NLNode]
-    edges: list[NLEdge]
 
-    def node_by_id(self, node_id: int) -> NLNode:
-        for node in self.nodes:
-            if node.id == node_id:
-                return node
-        raise KeyError(node_id)
-
-    def dependencies_of(self, node: NLNode) -> list[NLNode]:
-        """Return immediate outgoing dependency targets."""
-        target_ids = {
-            edge.target
-            for edge in self.edges
-            if edge.source == node.id
-        }
-        return [
-            candidate
-            for candidate in self.nodes
-            if candidate.id in target_ids
-        ]
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "root_id": self.root_id,
-            "nodes": [
-                {
-                    **asdict(node),
-                    "category": node.category.value,
-                }
-                for node in self.nodes
-            ],
-            "edges": [
-                {
-                    **asdict(edge),
-                    "type": edge.type.value,
-                }
-                for edge in self.edges
-            ],
-        }
-
-    def to_json(self, indent: int = 2) -> str:
-        return json.dumps(
-            self.to_dict(),
-            ensure_ascii=False,
-            indent=indent,
-        )
 
 ROOT_EXTRACTION_SCHEMA: dict[str, Any] = {
     "type": "object",
@@ -81,7 +40,7 @@ ROOT_EXTRACTION_SCHEMA: dict[str, Any] = {
                     "canonical_name": {"type": "string"},
                     "category": {
                         "type": "string",
-                        "enum": ["DEFINITION", "THEOREM"],
+                        "enum": ["DEFINITION", "THEOREM", "AXIOM"],
                     },
                     "description": {"type": "string"},
                     "edge_type": {
@@ -600,3 +559,97 @@ def find_dependencies_for_NL(
     graph: NLGraph,
 ) -> list[NLNode]:
     return graph.dependencies_of(node)
+
+
+# ---------------------------------------------------------------------------
+# CLI interface
+# ---------------------------------------------------------------------------
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Extract a natural-language mathematical dependency graph.",
+    )
+    
+    parser.add_argument(
+        "input",
+        nargs="?",
+        type=str,
+        help="Input proof text file (or - for stdin)",
+    )
+    
+    parser.add_argument(
+        "-o", "--output",
+        type=str,
+        default=None,
+        help="Output JSON file (default: print to stdout)",
+    )
+    
+    parser.add_argument(
+        "--model",
+        type=str,
+        default="gpt-4o",
+        help="OpenAI model name (default: gpt-4o)",
+    )
+    
+    parser.add_argument(
+        "--max-depth",
+        type=int,
+        default=2,
+        help="Maximum depth for background expansion (default: 2)",
+    )
+    
+    parser.add_argument(
+        "--max-nodes",
+        type=int,
+        default=40,
+        help="Maximum number of nodes (default: 40)",
+    )
+    
+    parser.add_argument(
+        "--no-background",
+        action="store_true",
+        help="Do not expand background prerequisites",
+    )
+    
+    parser.add_argument(
+        "--api-key",
+        type=str,
+        default=None,
+        help="OpenAI API key (default: OPENAI_API_KEY environment variable)",
+    )
+    
+    args = parser.parse_args()
+    
+    # Read proof text
+    if args.input is None or args.input == "-":
+        proof_text = sys.stdin.read()
+    else:
+        with open(args.input, "r", encoding="utf-8") as f:
+            proof_text = f.read()
+    
+    # Get API key
+    api_key = args.api_key or os.environ.get("OPENAI_API_KEY")
+    if not api_key:
+        print("Error: OPENAI_API_KEY not set and --api-key not provided", file=sys.stderr)
+        sys.exit(1)
+    
+    # Extract graph
+    print("Extracting NL dependency graph...", file=sys.stderr)
+    graph = extract_nl_dependency_graph(
+        proof_text,
+        api_key,
+        model=args.model,
+        max_depth=args.max_depth,
+        max_nodes=args.max_nodes,
+        expand_background=not args.no_background,
+    )
+    
+    # Output result
+    output_json = graph.to_json(indent=2)
+    
+    if args.output:
+        with open(args.output, "w", encoding="utf-8") as f:
+            f.write(output_json)
+        print(f"Graph written to {args.output}", file=sys.stderr)
+    else:
+        print(output_json)
