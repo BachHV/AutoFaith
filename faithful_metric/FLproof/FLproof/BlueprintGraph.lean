@@ -1,154 +1,238 @@
-import Mathlib
+import Lean
 import Architect
 import Lean.Elab.DeclarationRange
 
 open Lean
 open Lean Meta
 open Lean Elab Command
-open Architect
 
-namespace AutoFaith
+/-!
+# AutoFaith source-level declaration metadata
 
-structure GraphNode where
+This file intentionally does NOT traverse theorem proof terms or definition
+values when constructing graph dependencies.
+
+It has one job:
+
+1. resolve a source-written Lean identifier to its fully qualified declaration;
+2. classify the declaration;
+3. pretty-print its TYPE / theorem statement;
+4. report its defining module and declaration source range;
+5. report constants occurring in its TYPE.
+
+The Python side mines the original `.lean` source proof/definition body,
+extracts source-written identifiers, asks Lean to resolve those identifiers,
+and recursively builds the graph.
+
+Thus proof dependencies come from:
+
+    original source proof
+        -> identifier resolution
+
+NOT from:
+
+    ConstantInfo.thmInfo.value.getUsedConstants
+-/
+
+structure AutoFaithBlueprintNode where
   name : String
   category : String
   statement : String
   moduleName : String
+
   sourceStartLine : Option Nat := none
   sourceStartColumn : Option Nat := none
   sourceEndLine : Option Nat := none
   sourceEndColumn : Option Nat := none
 deriving ToJson
 
-structure GraphEdge where
-  source : String
-  target : String
-  kind : String
+
+structure AutoFaithDeclarationInfo where
+  query : String
+  node : AutoFaithBlueprintNode
+
+  /-
+  These are dependencies of the declaration TYPE only.
+
+  We deliberately do not expose dependencies obtained from the theorem proof
+  term or definition value.
+  -/
+  statementUses : Array String
 deriving ToJson
 
-structure Graph where
-  root : String
-  nodes : Array GraphNode
-  edges : Array GraphEdge
-deriving ToJson
-
-/-- Direct constants occurring in a declaration's value/proof. -/
-def directValueConstants (info : ConstantInfo) : Array Name :=
-  match info with
-  | .thmInfo v => v.value.getUsedConstants
-  | .defnInfo v => v.value.getUsedConstants
-  | .opaqueInfo v => v.value.getUsedConstants
-  | .inductInfo v => v.ctors.toArray
-  | _ => #[]
-
-/-- Register a declaration as a temporary Blueprint node. -/
-def registerAsBlueprint (name : Name) : CoreM Unit := do
-  let env ← getEnv
-  if (blueprintExt.find? env name).isSome then
-    return
-  unless env.contains name do
-    return
-  let node ← Architect.mkNode name {}
-  Architect.blueprintExt.add name node
-  modifyEnv fun env =>
-    Architect.addLeanNameOfLatexLabel env node.latexLabel name
 
 /--
-For one root, mark the root and every DIRECT constant in its statement/proof
-as Blueprint nodes. Then LeanArchitect stops at those constants instead of
-opening their implementations.
+AutoFaith-level declaration categories.
+
+`INSTANCE` is checked before `ConstantInfo`, since instances are typically
+ordinary definitions/theorems additionally registered for typeclass search.
 -/
-def prepareBlueprintBoundary (root : Name) : CoreM Unit := do
-  let info ← getConstInfo root
-  registerAsBlueprint root
-  for dependency in info.type.getUsedConstants do
-    registerAsBlueprint dependency
-  for dependency in directValueConstants info do
-    registerAsBlueprint dependency
+def autofaithCategory
+    (name : Name)
+    (info : ConstantInfo) :
+    CoreM String := do
 
-def categoryOf (info : ConstantInfo) : String :=
-  match info with
-  | .thmInfo _ => "THEOREM"
-  | _ => "DEFINITION"
+  if ← Lean.Meta.isInstance name then
+    return "INSTANCE"
 
-def moduleOf (name : Name) : CoreM String := do
+  return match info with
+  | .thmInfo _ =>
+      "THEOREM"
+
+  | .axiomInfo _ =>
+      "AXIOM"
+
+  | .inductInfo _ =>
+      "INDUCTIVE"
+
+  | .ctorInfo _ =>
+      "CONSTRUCTOR"
+
+  | .recInfo _ =>
+      "RECURSOR"
+
+  | .defnInfo _ =>
+      "DEFINITION"
+
+  | .opaqueInfo _ =>
+      "DEFINITION"
+
+  | .quotInfo _ =>
+      "DEFINITION"
+
+
+/-- Return the module in which `name` was introduced. -/
+def autofaithModuleName
+    (name : Name) :
+    CoreM String := do
+
   let env ← getEnv
-  if let some modIdx := env.const2ModIdx.get? name then
-    return env.header.moduleNames[modIdx.toNat]!.toString
-  else
-    return env.header.mainModule.toString
 
-def prettyStatement (name : Name) : MetaM String := do
-  let info ← getConstInfo name
-  return (← Meta.ppExpr info.type).pretty
+  let moduleName :=
+    match env.getModuleIdxFor? name with
+    | some index =>
+        env.allImportedModuleNames[index]!
 
-def makeNode (name : Name) : MetaM GraphNode := do
+    | none =>
+        env.header.mainModule
+
+  return moduleName.toString
+
+
+/--
+Make one human-readable declaration node.
+
+There is deliberately no `proof` and no `definition` field here.
+-/
+def autofaithMakeNode
+    (name : Name) :
+    TermElabM AutoFaithBlueprintNode := do
+
   let info ← getConstInfo name
-  let statement ← prettyStatement name
-  let moduleName ← moduleOf name
-  let ranges? ← findDeclarationRanges? name
-  let sourceStartLine := ranges?.map fun ranges => ranges.range.pos.line
-  let sourceStartColumn := ranges?.map fun ranges => ranges.range.pos.column
-  let sourceEndLine := ranges?.map fun ranges => ranges.range.endPos.line
-  let sourceEndColumn := ranges?.map fun ranges => ranges.range.endPos.column
+
+  let category ←
+    autofaithCategory name info
+
+  let moduleName ←
+    autofaithModuleName name
+
+  let statementFmt ←
+    Meta.ppExpr info.type
+
+  let ranges? ←
+    findDeclarationRanges? name
+
+  let sourceStartLine :=
+    ranges?.map fun ranges =>
+      ranges.range.pos.line
+
+  let sourceStartColumn :=
+    ranges?.map fun ranges =>
+      ranges.range.pos.column
+
+  let sourceEndLine :=
+    ranges?.map fun ranges =>
+      ranges.range.endPos.line
+
+  let sourceEndColumn :=
+    ranges?.map fun ranges =>
+      ranges.range.endPos.column
+
   return {
     name := name.toString
-    category := categoryOf info
-    statement := statement
+    category := category
+    statement := statementFmt.pretty
     moduleName := moduleName
+
     sourceStartLine := sourceStartLine
     sourceStartColumn := sourceStartColumn
     sourceEndLine := sourceEndLine
     sourceEndColumn := sourceEndColumn
   }
 
-syntax (name := autofaithGraphCmd) "#autofaith_graph" ident : command
 
-@[command_elab autofaithGraphCmd]
-def elabAutoFaithGraph : CommandElab := fun stx => do
+/--
+Constants directly occurring in the declaration TYPE.
+
+This may contain notation/typeclass infrastructure introduced while
+elaborating the statement, but it NEVER reads the theorem proof term or
+definition value.
+-/
+def autofaithStatementUses
+    (name : Name) :
+    CoreM (Array String) := do
+
+  let info ← getConstInfo name
+
+  return info.type.getUsedConstants.map
+    (fun dependency =>
+      dependency.toString)
+
+
+syntax (name := autofaith_decl_info)
+  "#autofaith_decl_info" ident : command
+
+
+/--
+Resolve exactly one identifier in Lean's current namespace/open context and
+print its metadata.
+
+Python deliberately invokes this command on identifiers that were literally
+found in a source proof/definition.  This lets Lean perform name resolution
+without using the elaborated theorem proof term as a dependency source.
+-/
+@[command_elab autofaith_decl_info]
+def elabAutoFaithDeclInfo :
+    CommandElab := fun stx => do
+
   match stx with
-  | `(command| #autofaith_graph $rootSyntax:ident) =>
-      let root ← liftCoreM <| realizeGlobalConstNoOverloadWithInfo rootSyntax
+  | `(command|
+      #autofaith_decl_info $queryIdent:ident) =>
 
-      -- Build the direct Blueprint boundary.
-      liftCoreM <| prepareBlueprintBoundary root
+      let resolved ←
+        liftCoreM <|
+          realizeGlobalConstNoOverloadWithInfo
+            queryIdent
 
-      -- LeanArchitect separates statement dependencies and proof dependencies.
-      let (statementUsed, proofUsed) ← liftCoreM <| Architect.collectUsed root
+      let node ←
+        liftTermElabM <|
+          autofaithMakeNode
+            resolved
 
-      let mut names : NameSet := {}
-      names := names.insert root
-      for name in statementUsed do
-        names := names.insert name
-      for name in proofUsed do
-        names := names.insert name
+      let statementUses ←
+        liftCoreM <|
+          autofaithStatementUses
+            resolved
 
-      let mut nodes : Array GraphNode := #[]
-      for name in names do
-        let node ← liftTermElabM <| makeNode name
-        nodes := nodes.push node
-
-      let mut edges : Array GraphEdge := #[]
-      for dependency in statementUsed do
-        edges := edges.push {
-          source := root.toString
-          target := dependency.toString
-          kind := "STATEMENT_USES"
-        }
-      for dependency in proofUsed do
-        edges := edges.push {
-          source := root.toString
-          target := dependency.toString
-          kind := "PROOF_USES"
-        }
-
-      let graph : Graph := {
-        root := root.toString
-        nodes := nodes
-        edges := edges
+      let result : AutoFaithDeclarationInfo := {
+        query := queryIdent.getId.toString
+        node := node
+        statementUses := statementUses
       }
 
-      liftIO <| IO.println s!"AUTOFAITH_BLUEPRINT_JSON:{(toJson graph).compress}"
-  | _ => throwUnsupportedSyntax
+      liftIO <|
+        IO.println
+          s!"AUTOFAITH_DECL_JSON:{(toJson result).compress}"
 
-end AutoFaith
+  | _ =>
+      throwUnsupportedSyntax
