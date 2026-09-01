@@ -10,11 +10,16 @@ class NodeCategory(Enum):
     DEFINITION = "DEFINITION"
     THEOREM = "THEOREM"
     AXIOM = "AXIOM"
+    INSTANCE = "INSTANCE"
+    INDUCTIVE = "INDUCTIVE"
+    CONSTRUCTOR = "CONSTRUCTOR"
+    RECURSOR = "RECURSOR"
 
 
 class EdgeType(str, Enum):
     STATEMENT_USES = "STATEMENT_USES"
     PROOF_USES = "PROOF_USES"
+    DEFINITION_USES = "DEFINITION_USES"
     REQUIRES = "REQUIRES"
     DEFINES_AS = "DEFINES_AS"
 
@@ -25,6 +30,7 @@ class NLNode:
     category: NodeCategory
     name : str
     statement: str
+    definition: str
     depth : int
     proof: str | None = None
     evidence: str | None = None
@@ -45,9 +51,27 @@ class NLEdge:
 class FLNode:
     id: int
     category: NodeCategory
+
+    
+
+    # Type / theorem proposition
     statement: str
+
+    # Only for theorem / lemma
     proof: str | None
+
+    # Only for definitions
+    definition: str | None
+
+    # Actual source .lean file
     directory: str
+
+    # Lean module
+    module_name: str
+
+    # Entire declaration from source
+    source_declaration: str | None = None
+    name: str | None = None
     
 
 
