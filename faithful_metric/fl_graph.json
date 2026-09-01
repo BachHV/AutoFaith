@@ -1,0 +1,511 @@
+{
+  "nodes": [
+    {
+      "id": 0,
+      "category": "THEOREM",
+      "statement": "∀ (x : ℝ), √(x ^ 2) = |x|",
+      "proof": "by\n  exact Real.sqrt_sq_eq_abs x",
+      "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/FLproof/proof.lean",
+      "definition": null,
+      "module_name": "FLproof.proof",
+      "source_declaration": "theorem mathlibExample\n    (x : ℝ) :\n    Real.sqrt (x ^ 2) = |x| := by\n  exact Real.sqrt_sq_eq_abs x"
+    },
+    {
+      "id": 1,
+      "category": "DEFINITION",
+      "statement": "{α : Sort u_1} → α → α → Prop",
+      "proof": null,
+      "directory": "/Users/vietbachhoang/.elan/toolchains/leanprover--lean4---v4.34.0-rc1/src/lean/Init/Prelude.lean",
+      "definition": "Eq.trans (Eq.trans hab (Eq.symm hcb)) hcd\n```\nEquality is much more than an equivalence relation, however. It has the important property that every assertion\nrespects the equivalence, in the sense that we can substitute equal expressions without changing the truth value.\nThat is, given `h1 : a = b` and `h2 : p a`, we can construct a proof for `p b` using substitution: `Eq.subst h1 h2`.\nExample:\n```\nexample (α : Type) (a b : α) (p : α → Prop)\n        (h1 : a = b) (h2 : p a) : p b :=\n  Eq.subst h1 h2\n\nexample (α : Type) (a b : α) (p : α → Prop)\n    (h1 : a = b) (h2 : p a) : p b :=\n  h1 ▸ h2\n```\nThe triangle in the second presentation is a macro built on top of `Eq.subst` and `Eq.symm`, and you can enter it by typing `\\t`.\nFor more information: [Equality](https://lean-lang.org/theorem_proving_in_lean4/quantifiers_and_equality.html#equality)\n-/\ninductive Eq : α → α → Prop where\n  /-- `Eq.refl a : a = a` is reflexivity, the unique constructor of the\n  equality type. See also `rfl`, which is usually used instead. -/\n  | refl (a : α) : Eq a a",
+      "module_name": "Init.Prelude",
+      "source_declaration": "The equality relation. It has one introduction rule, `Eq.refl`.\nWe use `a = b` as notation for `Eq a b`.\nA fundamental property of equality is that it is an equivalence relation.\n```\nvariable (α : Type) (a b c d : α)\nvariable (hab : a = b) (hcb : c = b) (hcd : c = d)\n\nexample : a = d :=\n  Eq.trans (Eq.trans hab (Eq.symm hcb)) hcd\n```\nEquality is much more than an equivalence relation, however. It has the important property that every assertion\nrespects the equivalence, in the sense that we can substitute equal expressions without changing the truth value.\nThat is, given `h1 : a = b` and `h2 : p a`, we can construct a proof for `p b` using substitution: `Eq.subst h1 h2`.\nExample:\n```\nexample (α : Type) (a b : α) (p : α → Prop)\n        (h1 : a = b) (h2 : p a) : p b :=\n  Eq.subst h1 h2\n\nexample (α : Type) (a b : α) (p : α → Prop)\n    (h1 : a = b) (h2 : p a) : p b :=\n  h1 ▸ h2\n```\nThe triangle in the second presentation is a macro built on top of `Eq.subst` and `Eq.symm`, and you can enter it by typing `\\t`.\nFor more information: [Equality](https://lean-lang.org/theorem_proving_in_lean4/quantifiers_and_equality.html#equality)\n-/\ninductive Eq : α → α → Prop where\n  /-- `Eq.refl a : a = a` is reflexivity, the unique constructor of the\n  equality type. See also `rfl`, which is usually used instead. -/\n  | refl (a : α) : Eq a a"
+    },
+    {
+      "id": 2,
+      "category": "DEFINITION",
+      "statement": "{α : Type u} → {β : Type v} → {γ : outParam (Type w)} → [self : HPow α β γ] → α → β → γ",
+      "proof": null,
+      "directory": "/Users/vietbachhoang/.elan/toolchains/leanprover--lean4---v4.34.0-rc1/src/lean/Init/Prelude.lean",
+      "definition": null,
+      "module_name": "Init.Prelude",
+      "source_declaration": null
+    },
+    {
+      "id": 3,
+      "category": "DEFINITION",
+      "statement": "{M : Type u} → [self : Monoid M] → NPow M",
+      "proof": null,
+      "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/.lake/packages/mathlib/Mathlib/Algebra/Group/Defs.lean",
+      "definition": null,
+      "module_name": "Mathlib.Algebra.Group.Defs",
+      "source_declaration": null
+    },
+    {
+      "id": 4,
+      "category": "DEFINITION",
+      "statement": "{M : Type u_2} → [NPow M] → Pow M ℕ",
+      "proof": null,
+      "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/.lake/packages/mathlib/Mathlib/Algebra/Group/Defs.lean",
+      "definition": "⟨fun x n ↦ NPow.npow n x⟩",
+      "module_name": "Mathlib.Algebra.Group.Defs",
+      "source_declaration": "instance NPow.toPow {M : Type*} [NPow M] : Pow M ℕ :=\n  ⟨fun x n ↦ NPow.npow n x⟩"
+    },
+    {
+      "id": 5,
+      "category": "DEFINITION",
+      "statement": "Type",
+      "proof": null,
+      "directory": "/Users/vietbachhoang/.elan/toolchains/leanprover--lean4---v4.34.0-rc1/src/lean/Init/Prelude.lean",
+      "definition": null,
+      "module_name": "Init.Prelude",
+      "source_declaration": "The natural numbers, starting at zero.\n\nThis type is special-cased by both the kernel and the compiler, and overridden with an efficient\nimplementation. Both use a fast arbitrary-precision arithmetic library (usually\n[GMP](https://gmplib.org/)); at runtime, `Nat` values that are sufficiently small are unboxed.\n-/\n@[suggest_for ℕ]\ninductive Nat where\n  /--\n  Zero, the smallest natural number.\n\n  Using `Nat.zero` explicitly should usually be avoided in favor of the literal `0`, which is the\n  [simp normal form](lean-manual://section/simp-normal-forms).\n  -/\n  | zero : Nat\n  /--\n  The successor of a natural number `n`.\n\n  Using `Nat.succ n` should usually be avoided in favor of `n + 1`, which is the [simp normal\n  form](lean-manual://section/simp-normal-forms).\n  -/\n  | succ (n : Nat) : Nat"
+    },
+    {
+      "id": 6,
+      "category": "DEFINITION",
+      "statement": "{α : Type u} → (x : ℕ) → [self : OfNat α x] → α",
+      "proof": null,
+      "directory": "/Users/vietbachhoang/.elan/toolchains/leanprover--lean4---v4.34.0-rc1/src/lean/Init/Prelude.lean",
+      "definition": "Fin.Internal.ofNat (HPow.hPow 2 n) (Nat.pow_pos (Nat.zero_lt_succ _)) i\n\n/--\nReturn the underlying `Nat` that represents a bitvector.\n\nThis is O(1) because `BitVec` is a (zero-cost) wrapper around a `Nat`.\n-/\n@[implicit_reducible]",
+      "module_name": "Init.Prelude",
+      "source_declaration": "protected def BitVec.ofNat (n : Nat) (i : Nat) : BitVec n where\n  toFin := Fin.Internal.ofNat (HPow.hPow 2 n) (Nat.pow_pos (Nat.zero_lt_succ _)) i\n\n/--\nReturn the underlying `Nat` that represents a bitvector.\n\nThis is O(1) because `BitVec` is a (zero-cost) wrapper around a `Nat`.\n-/\n@[implicit_reducible]"
+    },
+    {
+      "id": 7,
+      "category": "DEFINITION",
+      "statement": "Type",
+      "proof": null,
+      "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/.lake/packages/mathlib/Mathlib/Data/Real/Basic.lean",
+      "definition": null,
+      "module_name": "Mathlib.Data.Real.Basic",
+      "source_declaration": "numbers. -/\n@[wikidata Q12916, wikidata Q2584477]\nstructure Real where ofCauchy ::\n  /-- The underlying Cauchy completion -/\n  cauchy : CauSeq.Completion.Cauchy (abs : ℚ → ℚ)"
+    },
+    {
+      "id": 8,
+      "category": "DEFINITION",
+      "statement": "AddGroup ℝ",
+      "proof": null,
+      "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/.lake/packages/mathlib/Mathlib/Data/Real/Basic.lean",
+      "definition": null,
+      "module_name": "Mathlib.Data.Real.Basic",
+      "source_declaration": null
+    },
+    {
+      "id": 9,
+      "category": "DEFINITION",
+      "statement": "Monoid ℝ",
+      "proof": null,
+      "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/.lake/packages/mathlib/Mathlib/Data/Real/Basic.lean",
+      "definition": null,
+      "module_name": "Mathlib.Data.Real.Basic",
+      "source_declaration": null
+    },
+    {
+      "id": 10,
+      "category": "DEFINITION",
+      "statement": "Lattice ℝ",
+      "proof": null,
+      "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/.lake/packages/mathlib/Mathlib/Data/Real/Basic.lean",
+      "definition": "inferInstance",
+      "module_name": "Mathlib.Data.Real.Basic",
+      "source_declaration": "instance lattice : Lattice ℝ :=\n  inferInstance"
+    },
+    {
+      "id": 11,
+      "category": "DEFINITION",
+      "statement": "ℝ → ℝ",
+      "proof": null,
+      "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/.lake/packages/mathlib/Mathlib/Analysis/Real/Sqrt.lean",
+      "definition": "OrderIso.symm <| powOrderIso 2 two_ne_zero\n\n@[simp] lemma sq_sqrt (x : ℝ≥0) : sqrt x ^ 2 = x := sqrt.symm_apply_apply _\n\n@[simp] lemma sqrt_sq (x : ℝ≥0) : sqrt (x ^ 2) = x := sqrt.apply_symm_apply _\n\n@[simp] lemma mul_self_sqrt (x : ℝ≥0) : sqrt x * sqrt x = x := by rw [← sq, sq_sqrt]\n\n@[simp] lemma sqrt_mul_self (x : ℝ≥0) : sqrt (x * x) = x := by rw [← sq, sqrt_sq]",
+      "module_name": "Mathlib.Analysis.Real.Sqrt",
+      "source_declaration": "noncomputable def sqrt : ℝ≥0 ≃o ℝ≥0 :=\n  OrderIso.symm <| powOrderIso 2 two_ne_zero\n\n@[simp] lemma sq_sqrt (x : ℝ≥0) : sqrt x ^ 2 = x := sqrt.symm_apply_apply _\n\n@[simp] lemma sqrt_sq (x : ℝ≥0) : sqrt (x ^ 2) = x := sqrt.apply_symm_apply _\n\n@[simp] lemma mul_self_sqrt (x : ℝ≥0) : sqrt x * sqrt x = x := by rw [← sq, sq_sqrt]\n\n@[simp] lemma sqrt_mul_self (x : ℝ≥0) : sqrt (x * x) = x := by rw [← sq, sqrt_sq]"
+    },
+    {
+      "id": 12,
+      "category": "THEOREM",
+      "statement": "∀ (x : ℝ), √(x ^ 2) = |x|",
+      "proof": "by rw [sq, sqrt_mul_self_eq_abs]",
+      "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/.lake/packages/mathlib/Mathlib/Analysis/Real/Sqrt.lean",
+      "definition": null,
+      "module_name": "Mathlib.Analysis.Real.Sqrt",
+      "source_declaration": "theorem sqrt_sq_eq_abs (x : ℝ) : √(x ^ 2) = |x| := by rw [sq, sqrt_mul_self_eq_abs]"
+    },
+    {
+      "id": 13,
+      "category": "DEFINITION",
+      "statement": "{α : Type u_1} → [Lattice α] → [AddGroup α] → α → α",
+      "proof": null,
+      "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/.lake/packages/mathlib/Mathlib/Algebra/Order/Group/Unbundled/Abs.lean",
+      "definition": null,
+      "module_name": "Mathlib.Algebra.Order.Group.Unbundled.Abs",
+      "source_declaration": null
+    },
+    {
+      "id": 14,
+      "category": "DEFINITION",
+      "statement": "{α : Type u_1} → {β : Type u_2} → [Pow α β] → HPow α β α",
+      "proof": null,
+      "directory": "/Users/vietbachhoang/.elan/toolchains/leanprover--lean4---v4.34.0-rc1/src/lean/Init/Prelude.lean",
+      "definition": "Pow.pow a b",
+      "module_name": "Init.Prelude",
+      "source_declaration": "instance instHPow [Pow α β] : HPow α β α where\n  hPow a b := Pow.pow a b"
+    },
+    {
+      "id": 15,
+      "category": "DEFINITION",
+      "statement": "(n : ℕ) → OfNat ℕ n",
+      "proof": null,
+      "directory": "/Users/vietbachhoang/.elan/toolchains/leanprover--lean4---v4.34.0-rc1/src/lean/Init/Prelude.lean",
+      "definition": "n",
+      "module_name": "Init.Prelude",
+      "source_declaration": "instance instOfNatNat (n : Nat) : OfNat Nat n where\n  ofNat := n"
+    }
+  ],
+  "edges": [
+    {
+      "source": {
+        "id": 0,
+        "category": "THEOREM",
+        "statement": "∀ (x : ℝ), √(x ^ 2) = |x|",
+        "proof": "by\n  exact Real.sqrt_sq_eq_abs x",
+        "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/FLproof/proof.lean",
+        "definition": null,
+        "module_name": "FLproof.proof",
+        "source_declaration": "theorem mathlibExample\n    (x : ℝ) :\n    Real.sqrt (x ^ 2) = |x| := by\n  exact Real.sqrt_sq_eq_abs x"
+      },
+      "target": {
+        "id": 7,
+        "category": "DEFINITION",
+        "statement": "Type",
+        "proof": null,
+        "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/.lake/packages/mathlib/Mathlib/Data/Real/Basic.lean",
+        "definition": null,
+        "module_name": "Mathlib.Data.Real.Basic",
+        "source_declaration": "numbers. -/\n@[wikidata Q12916, wikidata Q2584477]\nstructure Real where ofCauchy ::\n  /-- The underlying Cauchy completion -/\n  cauchy : CauSeq.Completion.Cauchy (abs : ℚ → ℚ)"
+      },
+      "type": "STATEMENT_USES"
+    },
+    {
+      "source": {
+        "id": 0,
+        "category": "THEOREM",
+        "statement": "∀ (x : ℝ), √(x ^ 2) = |x|",
+        "proof": "by\n  exact Real.sqrt_sq_eq_abs x",
+        "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/FLproof/proof.lean",
+        "definition": null,
+        "module_name": "FLproof.proof",
+        "source_declaration": "theorem mathlibExample\n    (x : ℝ) :\n    Real.sqrt (x ^ 2) = |x| := by\n  exact Real.sqrt_sq_eq_abs x"
+      },
+      "target": {
+        "id": 10,
+        "category": "DEFINITION",
+        "statement": "Lattice ℝ",
+        "proof": null,
+        "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/.lake/packages/mathlib/Mathlib/Data/Real/Basic.lean",
+        "definition": "inferInstance",
+        "module_name": "Mathlib.Data.Real.Basic",
+        "source_declaration": "instance lattice : Lattice ℝ :=\n  inferInstance"
+      },
+      "type": "STATEMENT_USES"
+    },
+    {
+      "source": {
+        "id": 0,
+        "category": "THEOREM",
+        "statement": "∀ (x : ℝ), √(x ^ 2) = |x|",
+        "proof": "by\n  exact Real.sqrt_sq_eq_abs x",
+        "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/FLproof/proof.lean",
+        "definition": null,
+        "module_name": "FLproof.proof",
+        "source_declaration": "theorem mathlibExample\n    (x : ℝ) :\n    Real.sqrt (x ^ 2) = |x| := by\n  exact Real.sqrt_sq_eq_abs x"
+      },
+      "target": {
+        "id": 13,
+        "category": "DEFINITION",
+        "statement": "{α : Type u_1} → [Lattice α] → [AddGroup α] → α → α",
+        "proof": null,
+        "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/.lake/packages/mathlib/Mathlib/Algebra/Order/Group/Unbundled/Abs.lean",
+        "definition": null,
+        "module_name": "Mathlib.Algebra.Order.Group.Unbundled.Abs",
+        "source_declaration": null
+      },
+      "type": "STATEMENT_USES"
+    },
+    {
+      "source": {
+        "id": 0,
+        "category": "THEOREM",
+        "statement": "∀ (x : ℝ), √(x ^ 2) = |x|",
+        "proof": "by\n  exact Real.sqrt_sq_eq_abs x",
+        "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/FLproof/proof.lean",
+        "definition": null,
+        "module_name": "FLproof.proof",
+        "source_declaration": "theorem mathlibExample\n    (x : ℝ) :\n    Real.sqrt (x ^ 2) = |x| := by\n  exact Real.sqrt_sq_eq_abs x"
+      },
+      "target": {
+        "id": 8,
+        "category": "DEFINITION",
+        "statement": "AddGroup ℝ",
+        "proof": null,
+        "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/.lake/packages/mathlib/Mathlib/Data/Real/Basic.lean",
+        "definition": null,
+        "module_name": "Mathlib.Data.Real.Basic",
+        "source_declaration": null
+      },
+      "type": "STATEMENT_USES"
+    },
+    {
+      "source": {
+        "id": 0,
+        "category": "THEOREM",
+        "statement": "∀ (x : ℝ), √(x ^ 2) = |x|",
+        "proof": "by\n  exact Real.sqrt_sq_eq_abs x",
+        "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/FLproof/proof.lean",
+        "definition": null,
+        "module_name": "FLproof.proof",
+        "source_declaration": "theorem mathlibExample\n    (x : ℝ) :\n    Real.sqrt (x ^ 2) = |x| := by\n  exact Real.sqrt_sq_eq_abs x"
+      },
+      "target": {
+        "id": 15,
+        "category": "DEFINITION",
+        "statement": "(n : ℕ) → OfNat ℕ n",
+        "proof": null,
+        "directory": "/Users/vietbachhoang/.elan/toolchains/leanprover--lean4---v4.34.0-rc1/src/lean/Init/Prelude.lean",
+        "definition": "n",
+        "module_name": "Init.Prelude",
+        "source_declaration": "instance instOfNatNat (n : Nat) : OfNat Nat n where\n  ofNat := n"
+      },
+      "type": "STATEMENT_USES"
+    },
+    {
+      "source": {
+        "id": 0,
+        "category": "THEOREM",
+        "statement": "∀ (x : ℝ), √(x ^ 2) = |x|",
+        "proof": "by\n  exact Real.sqrt_sq_eq_abs x",
+        "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/FLproof/proof.lean",
+        "definition": null,
+        "module_name": "FLproof.proof",
+        "source_declaration": "theorem mathlibExample\n    (x : ℝ) :\n    Real.sqrt (x ^ 2) = |x| := by\n  exact Real.sqrt_sq_eq_abs x"
+      },
+      "target": {
+        "id": 4,
+        "category": "DEFINITION",
+        "statement": "{M : Type u_2} → [NPow M] → Pow M ℕ",
+        "proof": null,
+        "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/.lake/packages/mathlib/Mathlib/Algebra/Group/Defs.lean",
+        "definition": "⟨fun x n ↦ NPow.npow n x⟩",
+        "module_name": "Mathlib.Algebra.Group.Defs",
+        "source_declaration": "instance NPow.toPow {M : Type*} [NPow M] : Pow M ℕ :=\n  ⟨fun x n ↦ NPow.npow n x⟩"
+      },
+      "type": "STATEMENT_USES"
+    },
+    {
+      "source": {
+        "id": 0,
+        "category": "THEOREM",
+        "statement": "∀ (x : ℝ), √(x ^ 2) = |x|",
+        "proof": "by\n  exact Real.sqrt_sq_eq_abs x",
+        "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/FLproof/proof.lean",
+        "definition": null,
+        "module_name": "FLproof.proof",
+        "source_declaration": "theorem mathlibExample\n    (x : ℝ) :\n    Real.sqrt (x ^ 2) = |x| := by\n  exact Real.sqrt_sq_eq_abs x"
+      },
+      "target": {
+        "id": 9,
+        "category": "DEFINITION",
+        "statement": "Monoid ℝ",
+        "proof": null,
+        "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/.lake/packages/mathlib/Mathlib/Data/Real/Basic.lean",
+        "definition": null,
+        "module_name": "Mathlib.Data.Real.Basic",
+        "source_declaration": null
+      },
+      "type": "STATEMENT_USES"
+    },
+    {
+      "source": {
+        "id": 0,
+        "category": "THEOREM",
+        "statement": "∀ (x : ℝ), √(x ^ 2) = |x|",
+        "proof": "by\n  exact Real.sqrt_sq_eq_abs x",
+        "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/FLproof/proof.lean",
+        "definition": null,
+        "module_name": "FLproof.proof",
+        "source_declaration": "theorem mathlibExample\n    (x : ℝ) :\n    Real.sqrt (x ^ 2) = |x| := by\n  exact Real.sqrt_sq_eq_abs x"
+      },
+      "target": {
+        "id": 2,
+        "category": "DEFINITION",
+        "statement": "{α : Type u} → {β : Type v} → {γ : outParam (Type w)} → [self : HPow α β γ] → α → β → γ",
+        "proof": null,
+        "directory": "/Users/vietbachhoang/.elan/toolchains/leanprover--lean4---v4.34.0-rc1/src/lean/Init/Prelude.lean",
+        "definition": null,
+        "module_name": "Init.Prelude",
+        "source_declaration": null
+      },
+      "type": "STATEMENT_USES"
+    },
+    {
+      "source": {
+        "id": 0,
+        "category": "THEOREM",
+        "statement": "∀ (x : ℝ), √(x ^ 2) = |x|",
+        "proof": "by\n  exact Real.sqrt_sq_eq_abs x",
+        "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/FLproof/proof.lean",
+        "definition": null,
+        "module_name": "FLproof.proof",
+        "source_declaration": "theorem mathlibExample\n    (x : ℝ) :\n    Real.sqrt (x ^ 2) = |x| := by\n  exact Real.sqrt_sq_eq_abs x"
+      },
+      "target": {
+        "id": 5,
+        "category": "DEFINITION",
+        "statement": "Type",
+        "proof": null,
+        "directory": "/Users/vietbachhoang/.elan/toolchains/leanprover--lean4---v4.34.0-rc1/src/lean/Init/Prelude.lean",
+        "definition": null,
+        "module_name": "Init.Prelude",
+        "source_declaration": "The natural numbers, starting at zero.\n\nThis type is special-cased by both the kernel and the compiler, and overridden with an efficient\nimplementation. Both use a fast arbitrary-precision arithmetic library (usually\n[GMP](https://gmplib.org/)); at runtime, `Nat` values that are sufficiently small are unboxed.\n-/\n@[suggest_for ℕ]\ninductive Nat where\n  /--\n  Zero, the smallest natural number.\n\n  Using `Nat.zero` explicitly should usually be avoided in favor of the literal `0`, which is the\n  [simp normal form](lean-manual://section/simp-normal-forms).\n  -/\n  | zero : Nat\n  /--\n  The successor of a natural number `n`.\n\n  Using `Nat.succ n` should usually be avoided in favor of `n + 1`, which is the [simp normal\n  form](lean-manual://section/simp-normal-forms).\n  -/\n  | succ (n : Nat) : Nat"
+      },
+      "type": "STATEMENT_USES"
+    },
+    {
+      "source": {
+        "id": 0,
+        "category": "THEOREM",
+        "statement": "∀ (x : ℝ), √(x ^ 2) = |x|",
+        "proof": "by\n  exact Real.sqrt_sq_eq_abs x",
+        "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/FLproof/proof.lean",
+        "definition": null,
+        "module_name": "FLproof.proof",
+        "source_declaration": "theorem mathlibExample\n    (x : ℝ) :\n    Real.sqrt (x ^ 2) = |x| := by\n  exact Real.sqrt_sq_eq_abs x"
+      },
+      "target": {
+        "id": 11,
+        "category": "DEFINITION",
+        "statement": "ℝ → ℝ",
+        "proof": null,
+        "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/.lake/packages/mathlib/Mathlib/Analysis/Real/Sqrt.lean",
+        "definition": "OrderIso.symm <| powOrderIso 2 two_ne_zero\n\n@[simp] lemma sq_sqrt (x : ℝ≥0) : sqrt x ^ 2 = x := sqrt.symm_apply_apply _\n\n@[simp] lemma sqrt_sq (x : ℝ≥0) : sqrt (x ^ 2) = x := sqrt.apply_symm_apply _\n\n@[simp] lemma mul_self_sqrt (x : ℝ≥0) : sqrt x * sqrt x = x := by rw [← sq, sq_sqrt]\n\n@[simp] lemma sqrt_mul_self (x : ℝ≥0) : sqrt (x * x) = x := by rw [← sq, sqrt_sq]",
+        "module_name": "Mathlib.Analysis.Real.Sqrt",
+        "source_declaration": "noncomputable def sqrt : ℝ≥0 ≃o ℝ≥0 :=\n  OrderIso.symm <| powOrderIso 2 two_ne_zero\n\n@[simp] lemma sq_sqrt (x : ℝ≥0) : sqrt x ^ 2 = x := sqrt.symm_apply_apply _\n\n@[simp] lemma sqrt_sq (x : ℝ≥0) : sqrt (x ^ 2) = x := sqrt.apply_symm_apply _\n\n@[simp] lemma mul_self_sqrt (x : ℝ≥0) : sqrt x * sqrt x = x := by rw [← sq, sq_sqrt]\n\n@[simp] lemma sqrt_mul_self (x : ℝ≥0) : sqrt (x * x) = x := by rw [← sq, sqrt_sq]"
+      },
+      "type": "STATEMENT_USES"
+    },
+    {
+      "source": {
+        "id": 0,
+        "category": "THEOREM",
+        "statement": "∀ (x : ℝ), √(x ^ 2) = |x|",
+        "proof": "by\n  exact Real.sqrt_sq_eq_abs x",
+        "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/FLproof/proof.lean",
+        "definition": null,
+        "module_name": "FLproof.proof",
+        "source_declaration": "theorem mathlibExample\n    (x : ℝ) :\n    Real.sqrt (x ^ 2) = |x| := by\n  exact Real.sqrt_sq_eq_abs x"
+      },
+      "target": {
+        "id": 14,
+        "category": "DEFINITION",
+        "statement": "{α : Type u_1} → {β : Type u_2} → [Pow α β] → HPow α β α",
+        "proof": null,
+        "directory": "/Users/vietbachhoang/.elan/toolchains/leanprover--lean4---v4.34.0-rc1/src/lean/Init/Prelude.lean",
+        "definition": "Pow.pow a b",
+        "module_name": "Init.Prelude",
+        "source_declaration": "instance instHPow [Pow α β] : HPow α β α where\n  hPow a b := Pow.pow a b"
+      },
+      "type": "STATEMENT_USES"
+    },
+    {
+      "source": {
+        "id": 0,
+        "category": "THEOREM",
+        "statement": "∀ (x : ℝ), √(x ^ 2) = |x|",
+        "proof": "by\n  exact Real.sqrt_sq_eq_abs x",
+        "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/FLproof/proof.lean",
+        "definition": null,
+        "module_name": "FLproof.proof",
+        "source_declaration": "theorem mathlibExample\n    (x : ℝ) :\n    Real.sqrt (x ^ 2) = |x| := by\n  exact Real.sqrt_sq_eq_abs x"
+      },
+      "target": {
+        "id": 6,
+        "category": "DEFINITION",
+        "statement": "{α : Type u} → (x : ℕ) → [self : OfNat α x] → α",
+        "proof": null,
+        "directory": "/Users/vietbachhoang/.elan/toolchains/leanprover--lean4---v4.34.0-rc1/src/lean/Init/Prelude.lean",
+        "definition": "Fin.Internal.ofNat (HPow.hPow 2 n) (Nat.pow_pos (Nat.zero_lt_succ _)) i\n\n/--\nReturn the underlying `Nat` that represents a bitvector.\n\nThis is O(1) because `BitVec` is a (zero-cost) wrapper around a `Nat`.\n-/\n@[implicit_reducible]",
+        "module_name": "Init.Prelude",
+        "source_declaration": "protected def BitVec.ofNat (n : Nat) (i : Nat) : BitVec n where\n  toFin := Fin.Internal.ofNat (HPow.hPow 2 n) (Nat.pow_pos (Nat.zero_lt_succ _)) i\n\n/--\nReturn the underlying `Nat` that represents a bitvector.\n\nThis is O(1) because `BitVec` is a (zero-cost) wrapper around a `Nat`.\n-/\n@[implicit_reducible]"
+      },
+      "type": "STATEMENT_USES"
+    },
+    {
+      "source": {
+        "id": 0,
+        "category": "THEOREM",
+        "statement": "∀ (x : ℝ), √(x ^ 2) = |x|",
+        "proof": "by\n  exact Real.sqrt_sq_eq_abs x",
+        "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/FLproof/proof.lean",
+        "definition": null,
+        "module_name": "FLproof.proof",
+        "source_declaration": "theorem mathlibExample\n    (x : ℝ) :\n    Real.sqrt (x ^ 2) = |x| := by\n  exact Real.sqrt_sq_eq_abs x"
+      },
+      "target": {
+        "id": 1,
+        "category": "DEFINITION",
+        "statement": "{α : Sort u_1} → α → α → Prop",
+        "proof": null,
+        "directory": "/Users/vietbachhoang/.elan/toolchains/leanprover--lean4---v4.34.0-rc1/src/lean/Init/Prelude.lean",
+        "definition": "Eq.trans (Eq.trans hab (Eq.symm hcb)) hcd\n```\nEquality is much more than an equivalence relation, however. It has the important property that every assertion\nrespects the equivalence, in the sense that we can substitute equal expressions without changing the truth value.\nThat is, given `h1 : a = b` and `h2 : p a`, we can construct a proof for `p b` using substitution: `Eq.subst h1 h2`.\nExample:\n```\nexample (α : Type) (a b : α) (p : α → Prop)\n        (h1 : a = b) (h2 : p a) : p b :=\n  Eq.subst h1 h2\n\nexample (α : Type) (a b : α) (p : α → Prop)\n    (h1 : a = b) (h2 : p a) : p b :=\n  h1 ▸ h2\n```\nThe triangle in the second presentation is a macro built on top of `Eq.subst` and `Eq.symm`, and you can enter it by typing `\\t`.\nFor more information: [Equality](https://lean-lang.org/theorem_proving_in_lean4/quantifiers_and_equality.html#equality)\n-/\ninductive Eq : α → α → Prop where\n  /-- `Eq.refl a : a = a` is reflexivity, the unique constructor of the\n  equality type. See also `rfl`, which is usually used instead. -/\n  | refl (a : α) : Eq a a",
+        "module_name": "Init.Prelude",
+        "source_declaration": "The equality relation. It has one introduction rule, `Eq.refl`.\nWe use `a = b` as notation for `Eq a b`.\nA fundamental property of equality is that it is an equivalence relation.\n```\nvariable (α : Type) (a b c d : α)\nvariable (hab : a = b) (hcb : c = b) (hcd : c = d)\n\nexample : a = d :=\n  Eq.trans (Eq.trans hab (Eq.symm hcb)) hcd\n```\nEquality is much more than an equivalence relation, however. It has the important property that every assertion\nrespects the equivalence, in the sense that we can substitute equal expressions without changing the truth value.\nThat is, given `h1 : a = b` and `h2 : p a`, we can construct a proof for `p b` using substitution: `Eq.subst h1 h2`.\nExample:\n```\nexample (α : Type) (a b : α) (p : α → Prop)\n        (h1 : a = b) (h2 : p a) : p b :=\n  Eq.subst h1 h2\n\nexample (α : Type) (a b : α) (p : α → Prop)\n    (h1 : a = b) (h2 : p a) : p b :=\n  h1 ▸ h2\n```\nThe triangle in the second presentation is a macro built on top of `Eq.subst` and `Eq.symm`, and you can enter it by typing `\\t`.\nFor more information: [Equality](https://lean-lang.org/theorem_proving_in_lean4/quantifiers_and_equality.html#equality)\n-/\ninductive Eq : α → α → Prop where\n  /-- `Eq.refl a : a = a` is reflexivity, the unique constructor of the\n  equality type. See also `rfl`, which is usually used instead. -/\n  | refl (a : α) : Eq a a"
+      },
+      "type": "STATEMENT_USES"
+    },
+    {
+      "source": {
+        "id": 0,
+        "category": "THEOREM",
+        "statement": "∀ (x : ℝ), √(x ^ 2) = |x|",
+        "proof": "by\n  exact Real.sqrt_sq_eq_abs x",
+        "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/FLproof/proof.lean",
+        "definition": null,
+        "module_name": "FLproof.proof",
+        "source_declaration": "theorem mathlibExample\n    (x : ℝ) :\n    Real.sqrt (x ^ 2) = |x| := by\n  exact Real.sqrt_sq_eq_abs x"
+      },
+      "target": {
+        "id": 3,
+        "category": "DEFINITION",
+        "statement": "{M : Type u} → [self : Monoid M] → NPow M",
+        "proof": null,
+        "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/.lake/packages/mathlib/Mathlib/Algebra/Group/Defs.lean",
+        "definition": null,
+        "module_name": "Mathlib.Algebra.Group.Defs",
+        "source_declaration": null
+      },
+      "type": "STATEMENT_USES"
+    },
+    {
+      "source": {
+        "id": 0,
+        "category": "THEOREM",
+        "statement": "∀ (x : ℝ), √(x ^ 2) = |x|",
+        "proof": "by\n  exact Real.sqrt_sq_eq_abs x",
+        "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/FLproof/proof.lean",
+        "definition": null,
+        "module_name": "FLproof.proof",
+        "source_declaration": "theorem mathlibExample\n    (x : ℝ) :\n    Real.sqrt (x ^ 2) = |x| := by\n  exact Real.sqrt_sq_eq_abs x"
+      },
+      "target": {
+        "id": 12,
+        "category": "THEOREM",
+        "statement": "∀ (x : ℝ), √(x ^ 2) = |x|",
+        "proof": "by rw [sq, sqrt_mul_self_eq_abs]",
+        "directory": "/Users/vietbachhoang/AutoFaith/faithful_metric/FLproof/.lake/packages/mathlib/Mathlib/Analysis/Real/Sqrt.lean",
+        "definition": null,
+        "module_name": "Mathlib.Analysis.Real.Sqrt",
+        "source_declaration": "theorem sqrt_sq_eq_abs (x : ℝ) : √(x ^ 2) = |x| := by rw [sq, sqrt_mul_self_eq_abs]"
+      },
+      "type": "PROOF_USES"
+    }
+  ]
+}

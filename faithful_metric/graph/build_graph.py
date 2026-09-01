@@ -48,6 +48,7 @@ class FLNode:
     statement: str
     proof: str | None
     directory: str
+    
 
 
 @dataclass(frozen=True)
@@ -55,6 +56,7 @@ class FLEdge:
     source: FLNode
     target: FLNode
     type: EdgeType
+    
     
 
 
