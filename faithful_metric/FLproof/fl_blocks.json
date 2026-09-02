@@ -1,0 +1,286 @@
+{
+  "blocks": [
+    {
+      "kind": "compound",
+      "block": {
+        "previous_checkpoint": {
+          "premises": [
+            "a b : ℤ",
+            "ha : 2 ∣ a",
+            "hb : 2 ∣ b"
+          ],
+          "goal": [
+            "2 ∣ a + b"
+          ]
+        },
+        "arguments": [
+          "have ha' : ∃ k : ℤ, a = 2 * k := by exact ha"
+        ],
+        "next_checkpoint": {
+          "premises": [
+            "a b : ℤ",
+            "ha : 2 ∣ a",
+            "hb : 2 ∣ b",
+            "ha' : ∃ k, a = 2 * k"
+          ],
+          "goal": [
+            "2 ∣ a + b"
+          ]
+        }
+      },
+      "children": [
+        {
+          "kind": "leaf",
+          "block": {
+            "previous_checkpoint": {
+              "premises": [
+                "a b : ℤ",
+                "ha : 2 ∣ a",
+                "hb : 2 ∣ b"
+              ],
+              "goal": [
+                "∃ k, a = 2 * k"
+              ]
+            },
+            "arguments": [
+              "exact ha"
+            ],
+            "next_checkpoint": {
+              "premises": [],
+              "goal": []
+            }
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "kind": "compound",
+      "block": {
+        "previous_checkpoint": {
+          "premises": [
+            "a b : ℤ",
+            "ha : 2 ∣ a",
+            "hb : 2 ∣ b",
+            "ha' : ∃ k, a = 2 * k"
+          ],
+          "goal": [
+            "2 ∣ a + b"
+          ]
+        },
+        "arguments": [
+          "have hb' : ∃ l : ℤ, b = 2 * l := by exact hb"
+        ],
+        "next_checkpoint": {
+          "premises": [
+            "a b : ℤ",
+            "ha : 2 ∣ a",
+            "hb : 2 ∣ b",
+            "ha' : ∃ k, a = 2 * k",
+            "hb' : ∃ l, b = 2 * l"
+          ],
+          "goal": [
+            "2 ∣ a + b"
+          ]
+        }
+      },
+      "children": [
+        {
+          "kind": "leaf",
+          "block": {
+            "previous_checkpoint": {
+              "premises": [
+                "a b : ℤ",
+                "ha : 2 ∣ a",
+                "hb : 2 ∣ b",
+                "ha' : ∃ k, a = 2 * k"
+              ],
+              "goal": [
+                "∃ l, b = 2 * l"
+              ]
+            },
+            "arguments": [
+              "exact hb"
+            ],
+            "next_checkpoint": {
+              "premises": [],
+              "goal": []
+            }
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "kind": "leaf",
+      "block": {
+        "previous_checkpoint": {
+          "premises": [
+            "a b : ℤ",
+            "ha : 2 ∣ a",
+            "hb : 2 ∣ b",
+            "ha' : ∃ k, a = 2 * k",
+            "hb' : ∃ l, b = 2 * l"
+          ],
+          "goal": [
+            "2 ∣ a + b"
+          ]
+        },
+        "arguments": [
+          "rcases ha' with ⟨k, hk⟩"
+        ],
+        "next_checkpoint": {
+          "premises": [
+            "a b : ℤ",
+            "ha : 2 ∣ a",
+            "hb : 2 ∣ b",
+            "hb' : ∃ l, b = 2 * l",
+            "k : ℤ",
+            "hk : a = 2 * k"
+          ],
+          "goal": [
+            "2 ∣ a + b"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "kind": "leaf",
+      "block": {
+        "previous_checkpoint": {
+          "premises": [
+            "a b : ℤ",
+            "ha : 2 ∣ a",
+            "hb : 2 ∣ b",
+            "hb' : ∃ l, b = 2 * l",
+            "k : ℤ",
+            "hk : a = 2 * k"
+          ],
+          "goal": [
+            "2 ∣ a + b"
+          ]
+        },
+        "arguments": [
+          "rcases hb' with ⟨l, hl⟩"
+        ],
+        "next_checkpoint": {
+          "premises": [
+            "a b : ℤ",
+            "ha : 2 ∣ a",
+            "hb : 2 ∣ b",
+            "k : ℤ",
+            "hk : a = 2 * k",
+            "l : ℤ",
+            "hl : b = 2 * l"
+          ],
+          "goal": [
+            "2 ∣ a + b"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "kind": "leaf",
+      "block": {
+        "previous_checkpoint": {
+          "premises": [
+            "a b : ℤ",
+            "ha : 2 ∣ a",
+            "hb : 2 ∣ b",
+            "k : ℤ",
+            "hk : a = 2 * k",
+            "l : ℤ",
+            "hl : b = 2 * l"
+          ],
+          "goal": [
+            "2 ∣ a + b"
+          ]
+        },
+        "arguments": [
+          "use k + l"
+        ],
+        "next_checkpoint": {
+          "premises": [
+            "a b : ℤ",
+            "ha : 2 ∣ a",
+            "hb : 2 ∣ b",
+            "k : ℤ",
+            "hk : a = 2 * k",
+            "l : ℤ",
+            "hl : b = 2 * l"
+          ],
+          "goal": [
+            "a + b = 2 * (k + l)"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "kind": "leaf",
+      "block": {
+        "previous_checkpoint": {
+          "premises": [
+            "a b : ℤ",
+            "ha : 2 ∣ a",
+            "hb : 2 ∣ b",
+            "k : ℤ",
+            "hk : a = 2 * k",
+            "l : ℤ",
+            "hl : b = 2 * l"
+          ],
+          "goal": [
+            "a + b = 2 * (k + l)"
+          ]
+        },
+        "arguments": [
+          "rw [hk, hl]"
+        ],
+        "next_checkpoint": {
+          "premises": [
+            "a b : ℤ",
+            "ha : 2 ∣ a",
+            "hb : 2 ∣ b",
+            "k : ℤ",
+            "hk : a = 2 * k",
+            "l : ℤ",
+            "hl : b = 2 * l"
+          ],
+          "goal": [
+            "2 * k + 2 * l = 2 * (k + l)"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "kind": "leaf",
+      "block": {
+        "previous_checkpoint": {
+          "premises": [
+            "a b : ℤ",
+            "ha : 2 ∣ a",
+            "hb : 2 ∣ b",
+            "k : ℤ",
+            "hk : a = 2 * k",
+            "l : ℤ",
+            "hl : b = 2 * l"
+          ],
+          "goal": [
+            "2 * k + 2 * l = 2 * (k + l)"
+          ]
+        },
+        "arguments": [
+          "ring"
+        ],
+        "next_checkpoint": {
+          "premises": [],
+          "goal": []
+        }
+      },
+      "children": []
+    }
+  ]
+}

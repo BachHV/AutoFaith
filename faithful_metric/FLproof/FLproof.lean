@@ -1,1 +1,1 @@
-import FLproof.Basic
+import FLproof.proof
