@@ -1,4 +1,7 @@
+import json
 import sys
+from dataclasses import asdict
+from enum import Enum
 from pathlib import Path
 
 if __package__ in (None, ""):
@@ -16,7 +19,7 @@ else:
 config = JudgeConfig(
     model_name="gpt-5.2",
     provider=ModelProvider.OPENAI,
-    api_keys=APIKeys(openai_api_key="YOUR_OPENAI_API_KEY"),
+    api_keys=APIKeys(openai_api_key="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"),
     generation=GenerationConfig(
         temperature=0.0,
         max_tokens=4096,
@@ -26,11 +29,13 @@ config = JudgeConfig(
 
 judge = JudgeModel(config)
 
+
 theorem_statement = r"""
 \begin{theorem}
 Let $a,b \in \mathbb{Z}$. If $a$ and $b$ are even, then $a+b$ is even.
 \end{theorem}
 """
+
 natural_language_proof = r"""
 \begin{proof}
 Since $a$ is even, there exists an integer $k$ such that
@@ -49,10 +54,38 @@ Because $k+\ell$ is an integer, $a+b$ is divisible by $2$.
 Hence $a+b$ is even.
 \end{proof}
 """
+
+
 blocks = judge.generate_nl_blocks(
     theorem_statement,
     natural_language_proof,
 )
 
-for block in blocks:
-    print(block)
+
+def serialize(obj):
+    if isinstance(obj, Enum):
+        return obj.value
+    if hasattr(obj, "__dataclass_fields__"):
+        return {key: serialize(value) for key, value in asdict(obj).items()}
+    if isinstance(obj, list):
+        return [serialize(value) for value in obj]
+    if isinstance(obj, dict):
+        return {key: serialize(value) for key, value in obj.items()}
+    return obj
+
+
+output = {
+    "theorem_statement": theorem_statement.strip(),
+    "natural_language_proof": natural_language_proof.strip(),
+    "blocks": [serialize(block) for block in blocks],
+}
+
+
+output_path = Path(__file__).resolve().parent / "nl_blocks.json"
+
+output_path.write_text(
+    json.dumps(output, indent=2, ensure_ascii=False),
+    encoding="utf-8",
+)
+
+print(f"Saved NL blocks to: {output_path}")

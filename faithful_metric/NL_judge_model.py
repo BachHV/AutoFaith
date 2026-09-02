@@ -9,6 +9,8 @@ from typing import Any
 from openai import OpenAI
 from pydantic import BaseModel, ConfigDict
 
+
+
 if __package__ in (None, ""):
     project_root = Path(__file__).resolve().parent
     if str(project_root) not in sys.path:
@@ -17,10 +19,12 @@ if __package__ in (None, ""):
     from judge_config import JudgeConfig, ModelProvider
     from scorer.checkpoints import Checkpoint, NLBlock
     from scorer.prompt import NL_CHECKPOINT_GENERATION_PROMPT
+    from scorer.checkpoints import NLReasoningCategory
 else:
     from .judge_config import JudgeConfig, ModelProvider
     from .scorer.checkpoints import Checkpoint, NLBlock
     from .scorer.prompt import NL_CHECKPOINT_GENERATION_PROMPT
+    from .scorer.checkpoints import NLReasoningCategory
 
 
 # ============================================================
@@ -32,12 +36,18 @@ class CheckpointOutput(BaseModel):
     premises: list[str]
     goal: list[str]
 
-
 class NLBlockOutput(BaseModel):
     model_config = ConfigDict(extra="forbid")
+    reasoning_category: NLReasoningCategory
     previous_checkpoint: CheckpointOutput
     arguments: list[str]
     next_checkpoint: CheckpointOutput
+
+# class NLBlockOutput(BaseModel):
+    
+#     previous_checkpoint: CheckpointOutput
+#     arguments: list[str]
+#     next_checkpoint: CheckpointOutput
 
 
 class NLBlocksOutput(BaseModel):
@@ -287,6 +297,7 @@ class JudgeModel:
                 previous_checkpoint=cls._convert_checkpoint(block.previous_checkpoint),
                 arguments=block.arguments,
                 next_checkpoint=cls._convert_checkpoint(block.next_checkpoint),
+                reasoning_category=block.reasoning_category,
             )
             for block in output.blocks
         ]
