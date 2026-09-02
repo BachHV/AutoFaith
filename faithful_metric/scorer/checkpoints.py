@@ -49,12 +49,23 @@ class NLReasoningCategory(enum.Enum):
 @dataclass(frozen=True)
 class NLBlock (Block):
     reasoning_category: NLReasoningCategory | None = None
-    def _to_dict(self) -> dict:
-            return {
-                "premises": self.premises,
-                "goal": self.goal,
-                "reasoning_category": self.reasoning_category.value if self.reasoning_category is not None else None,
-            }
+    def to_dict(self) -> dict:
+        return {
+            "previous_checkpoint": {
+                "premises": self.previous_checkpoint.premises,
+                "goal": self.previous_checkpoint.goal,
+            },
+            "arguments": self.arguments,
+            "next_checkpoint": {
+                "premises": self.next_checkpoint.premises,
+                "goal": self.next_checkpoint.goal,
+            },
+            "reasoning_category": (
+                self.reasoning_category.value
+                if self.reasoning_category is not None
+                else None
+            ),
+        }
 
 
 class FLTacticCategory(enum.Enum):
