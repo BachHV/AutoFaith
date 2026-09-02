@@ -19,7 +19,7 @@ else:
 config = JudgeConfig(
     model_name="gpt-5.2",
     provider=ModelProvider.OPENAI,
-    api_keys=APIKeys(openai_api_key="YOUR_OPENAI_API_KEY"),
+    api_keys=APIKeys(openai_api_key="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"),
     generation=GenerationConfig(
         temperature=0.0,
         max_tokens=4096,
@@ -60,6 +60,14 @@ blocks = judge.generate_nl_blocks(
     theorem_statement,
     natural_language_proof,
 )
+
+while judge.validate_nl_blocks(blocks)[1] == False:
+    print("Invalid NL blocks detected. Regenerating...")
+    blocks = judge.generate_nl_blocks(
+        theorem_statement,
+        natural_language_proof,
+        feedback = "In this version\n" + blocks + "Here is the feedback\n" +  judge.validate_nl_blocks(blocks)[0]
+    )
 
 
 def serialize(obj):
