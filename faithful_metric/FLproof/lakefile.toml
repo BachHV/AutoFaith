@@ -19,7 +19,10 @@ name = "mathlib"
 scope = "leanprover-community"
 rev = "v4.34.0-rc1"
 
-
+[[require]]
+name = "REPL"
+git = "https://github.com/leanprover-community/repl.git"
+rev = "v4.34.0-rc1"
 
 [[lean_lib]]
 name = "FLproof"
