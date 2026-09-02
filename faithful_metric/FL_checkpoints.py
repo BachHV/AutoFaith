@@ -133,57 +133,43 @@ class LeanREPL:
 
     def _convert_raw_tactic(self, tactic: RawTactic) -> list[FLBlock]:
         children = []
-
         for child in sorted(tactic.children, key=lambda x: x.start):
             children.extend(self._convert_raw_tactic(child))
-
         if self._is_internal(tactic):
             return children
-
         before = self._goals_to_checkpoint(tactic.goals)
         after_result = self.send({"tactic": tactic.tactic, "proofState": tactic.proof_state})
         after = self._goals_to_checkpoint(after_result.get("goals", []))
-
         block = Block(
             previous_checkpoint=before,
             arguments=[tactic.tactic.strip()],
             next_checkpoint=after,
         )
-
         kind = FLTacticCategory.COMPOUND if children else FLTacticCategory.LEAF
         return [FLBlock(kind=kind, block=block, children=children)]
 
     def _goals_to_checkpoint(self, goals: str | list[str]) -> Checkpoint:
         if not goals or goals == "no goals":
             return Checkpoint([], [])
-
         if isinstance(goals, str):
             goals = [goals]
-
         premises, targets = [], []
-
         for state in goals:
             current_premises, target = self._parse_single_goal(state)
-
             for premise in current_premises:
                 if premise not in premises:
                     premises.append(premise)
-
             if target:
                 targets.append(target)
-
         return Checkpoint(premises, targets)
 
     @staticmethod
     def _parse_single_goal(state: str) -> tuple[list[str], str]:
         state = state.strip()
-
         if state == "no goals":
             return [], []
-
         if "⊢" not in state:
             return [], state
-
         context, target = state.rsplit("⊢", 1)
         premises = [
             line.strip()
