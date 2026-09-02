@@ -10,8 +10,8 @@ theorem main (a b : ℤ) (ha : 2 ∣ a) (hb : 2 ∣ b) :
   rcases hb with ⟨l, hl⟩
   use k + l
   calc
-    a + b = 2 * k + 2 * l := by rw [hk, hl]
-    _ = 2 * (k + l) := by ring
+  a + b = 2 * k + 2 * l := by rw [hk, hl]
+  _ = 2 * (k + l) := by ring
 
 #autofaith_decl_info main
 #check HAdd
