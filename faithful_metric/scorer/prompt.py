@@ -487,3 +487,338 @@ NLBlock(
 
 {NATURAL_LANGUAGE_PROOF}
 """
+
+
+WHOLE_PROOF_FAITHFULNESS_PROMPT = """
+You are a mathematical proof faithfulness judge.
+
+Your task is to evaluate whether a natural-language proof follows the same mathematical reasoning as a formal Lean proof.
+
+You are given:
+
+1. A sequence of natural-language proof blocks (`NLBlock`).
+2. A sequence of formal Lean proof blocks (`FLBlock`).
+
+Your goal is to judge the faithfulness of the NATURAL-LANGUAGE proof with respect to the FORMAL proof.
+
+Return a single faithfulness score between 0 and 1, where:
+
+* 1.0 means the natural-language proof faithfully represents the mathematical reasoning of the formal proof.
+* 0.0 means the two proofs follow fundamentally different reasoning or the natural-language proof is incompatible with the formal proof.
+* Intermediate values indicate partial correspondence.
+
+The comparison must be based on the WHOLE proof trajectory, not merely individual block similarity.
+
+# Proof Block Semantics
+
+A natural-language block has the form:
+
+NLBlock(
+previous_checkpoint,
+reasoning_category,
+arguments,
+next_checkpoint
+)
+
+and represents:
+
+previous_checkpoint
+-> natural-language reasoning
+-> next_checkpoint
+
+A formal block has the form:
+
+FLBlock(
+kind,
+block,
+children
+)
+
+where `block` contains:
+
+Block(
+previous_checkpoint,
+arguments,
+next_checkpoint
+)
+
+and `kind` is either:
+
+* `leaf`
+* `compound`
+
+A leaf FL block represents one formal tactic transition.
+
+A compound FL block represents one high-level Lean tactic that contains internal reasoning steps.
+
+For example:
+
+calc
+├── rw [hk, hl]
+└── ring
+
+The compound `calc` block represents the high-level transition, while its children represent the lower-level reasoning used to realize that transition.
+
+# Checkpoint Semantics
+
+Each checkpoint contains:
+
+* `premises`: facts currently available.
+* `goal`: mathematical statements currently being proved.
+
+The exact wording of NL and FL checkpoints may differ.
+
+Do NOT require textual equality.
+
+Instead, compare their MATHEMATICAL MEANING.
+
+Examples of equivalent information include:
+
+* "a is even"
+* "2 ∣ a"
+
+and:
+
+* "there exists k ∈ ℤ such that a = 2k"
+* a Lean context containing `k : ℤ` and `hk : a = 2 * k`
+
+# Main Evaluation Objective
+
+Determine whether the natural-language proof describes essentially the SAME PROOF PATH as the Lean proof.
+
+A faithful proof should preserve:
+
+1. the major mathematical strategy,
+2. the order of important reasoning steps,
+3. the introduction of important mathematical objects,
+4. the use of intermediate facts,
+5. the progression of goals,
+6. the mathematical dependencies between steps,
+7. the final conclusion.
+
+Do NOT demand one-to-one correspondence between NL blocks and FL blocks.
+
+One natural-language block may correspond to:
+
+* one FL block,
+* several consecutive FL blocks,
+* one compound FL block,
+* several children inside one compound FL block.
+
+Similarly, several natural-language blocks may correspond to one formal block when the formal tactic compresses multiple mathematical ideas.
+
+# Hierarchical FL Blocks
+
+When evaluating a compound FL block, consider BOTH:
+
+1. the high-level meaning of the compound block;
+2. the detailed reasoning contained in its children.
+
+For example, if the NL proof says:
+
+"a + b = 2k + 2l = 2(k+l)"
+
+and the FL proof contains:
+
+calc
+├── rw [hk, hl]
+└── ring
+
+then the NL statement may faithfully correspond to the entire compound `calc` block even though it does not explicitly mention `rw` or `ring`.
+
+Do not penalize the natural-language proof merely because it describes a compound formal argument at a higher level of abstraction.
+
+# Alignment
+
+Construct an order-preserving alignment between the NL blocks and FL blocks.
+
+The alignment must preserve proof order.
+
+If:
+
+NL_i corresponds to FL_j
+
+and:
+
+NL_k corresponds to FL_l
+
+with i < k,
+
+then normally j <= l.
+
+Do not create an alignment that arbitrarily reorders the proof.
+
+Each NL block may align with one or more FL blocks.
+
+Each FL block may align with one or more NL blocks when mathematically appropriate.
+
+A block may remain unmatched if it represents:
+
+* implementation detail,
+* syntactic bookkeeping,
+* a mathematically meaningful step missing from the other proof,
+* genuinely different reasoning.
+
+# What Counts as Faithful
+
+The following differences SHOULD generally be allowed:
+
+* natural language omits trivial algebraic details;
+* Lean uses implementation-level tactics not mentioned explicitly;
+* natural language groups several Lean tactics into one mathematical step;
+* Lean separates one natural-language step into several subgoals;
+* notation differs while mathematical meaning remains equivalent;
+* definitional equivalence is used;
+* obvious type information is explicit in Lean but implicit in natural language.
+
+The following differences SHOULD reduce faithfulness:
+
+* a theorem or fact is used in one proof but not represented by the other when it is essential to the argument;
+* a key witness or construction is different;
+* the proofs use substantially different intermediate results;
+* reasoning occurs in a fundamentally different order;
+* one proof uses a different major strategy;
+* the natural-language proof claims an inference not supported by the formal proof;
+* an essential formal reasoning step has no reasonable natural-language counterpart;
+* the natural-language proof introduces substantial reasoning absent from the formal proof.
+
+# Major Strategy
+
+Pay particular attention to proof strategy.
+
+Examples include:
+
+* direct proof,
+* contradiction,
+* contrapositive,
+* induction,
+* case analysis,
+* witness construction,
+* calculation,
+* application of a major theorem.
+
+If the proofs use fundamentally incompatible high-level strategies, the faithfulness score should be low even if they prove the same theorem.
+
+Proving the same statement is NOT sufficient for faithfulness.
+
+# Scoring Guidance
+
+Use the following approximate interpretation:
+
+0.90 - 1.00
+The NL proof closely follows the same reasoning trajectory as the FL proof. Differences are mainly abstraction level, notation, or minor omitted implementation details.
+
+0.75 - 0.90
+The major strategy and most intermediate reasoning agree, with some omissions, compression, or small differences.
+
+0.50 - 0.75
+The proofs share substantial reasoning but contain notable differences in intermediate steps, ordering, or justification.
+
+0.25 - 0.50
+The proofs have limited structural correspondence. They may share the same theorem or a few ideas but follow substantially different reasoning.
+
+0.00 - 0.25
+The proofs are incompatible, use fundamentally different strategies, or the natural-language proof does not meaningfully describe the formal proof.
+
+Do not assign 1.0 merely because both proofs are mathematically correct.
+
+The score measures FAITHFULNESS between the proofs, not correctness in isolation.
+
+# Required Analysis Procedure
+
+Perform the following internally:
+
+1. Identify the high-level strategy of the NL proof.
+2. Identify the high-level strategy of the FL proof.
+3. Compare the initial proof states.
+4. Construct an order-preserving alignment between NL and FL blocks.
+5. Compare checkpoint transitions under this alignment.
+6. Compare the mathematical meaning of the arguments.
+7. Inspect children of compound FL blocks when necessary.
+8. Identify important unmatched reasoning.
+9. Determine whether differences are merely differences in abstraction or genuinely different proof reasoning.
+10. Produce the final faithfulness score.
+
+# Output Format
+
+Return ONLY valid JSON.
+
+Use exactly this structure:
+
+{
+"score": 0.0,
+"strategy_match": true,
+"nl_strategy": "...",
+"fl_strategy": "...",
+"alignment": [
+{
+"nl_blocks": [0],
+"fl_blocks": [0],
+"match_score": 1.0,
+"reason": "..."
+},
+{
+"nl_blocks": [1],
+"fl_blocks": [1, 2],
+"match_score": 0.9,
+"reason": "..."
+}
+],
+"unmatched_nl_blocks": [],
+"unmatched_fl_blocks": [],
+"summary": "..."
+}
+
+## Field meanings
+
+`score`
+Overall proof faithfulness score in [0, 1].
+
+`strategy_match`
+Whether the two proofs use compatible overall proof strategies.
+
+`nl_strategy`
+Short description of the main natural-language proof strategy.
+
+`fl_strategy`
+Short description of the main formal proof strategy.
+
+`alignment`
+An order-preserving alignment between groups of NL and FL blocks.
+
+`nl_blocks`
+Zero-based indices of NL blocks participating in this alignment group.
+
+`fl_blocks`
+Zero-based indices of TOP-LEVEL FL blocks participating in this alignment group.
+
+If an FL block is compound, inspect its children internally when judging the match, but identify the compound block by its top-level index here.
+
+`match_score`
+Local semantic faithfulness score for this aligned group.
+
+`reason`
+Concise mathematical explanation of why these blocks correspond.
+
+`unmatched_nl_blocks`
+Zero-based indices of NL blocks without a reasonable formal counterpart.
+
+`unmatched_fl_blocks`
+Zero-based indices of top-level FL blocks without a reasonable natural-language counterpart.
+
+`summary`
+Concise explanation of the most important factors determining the overall score.
+
+Do not include markdown, comments, or additional text outside the JSON.
+
+# Input
+
+## Natural-language proof blocks
+
+{NL_BLOCKS}
+
+## Formal Lean proof blocks
+
+{FL_BLOCKS}
+"""
+
