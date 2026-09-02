@@ -28,6 +28,7 @@ if __package__ in (None, ""):
         )
 
     from faithful_metric.graph.build_graph import (
+        FLGraph,
         FLNode,
         FLEdge,
         NodeCategory,
@@ -36,6 +37,7 @@ if __package__ in (None, ""):
 
 else:
     from .build_graph import (
+        FLGraph,
         FLNode,
         FLEdge,
         NodeCategory,
@@ -649,15 +651,11 @@ def _namespace_at_offset(
                 value.split(".")
             )
 
-    return ".".join(
-        parts
-    )
+    return ".".join(parts
+)
 
 
-def _qualified_decl_name(
-    source: str,
-    match: re.Match[str],
-) -> str:
+def _qualified_decl_name(source: str, match: re.Match[str],) -> str:
 
     source_name = match.group(
         "name"
@@ -1725,23 +1723,9 @@ class _GraphBuilder:
         # depth 0 = root
         # depth 1 = direct dependencies
         # depth 2 = dependencies of direct dependencies
-        frontier: deque[
-            tuple[str, int]
-        ] = deque(
-            [
-                (
-                    root,
-                    0,
-                )
-            ]
-        )
+        frontier: deque[tuple[str, int]] = deque([(root, 0,)])
 
-        queued_depth: dict[
-            str,
-            int,
-        ] = {
-            root: 0
-        }
+        queued_depth: dict[str,int,] = {root: 0}
 
         expanded_depth: dict[
             str,
@@ -2283,10 +2267,7 @@ def _make_fl_edge(
 
 def convert_to_fl_graph(
     raw_graph: dict[str, Any],
-) -> tuple[
-    list[FLNode],
-    list[FLEdge],
-]:
+) -> FLGraph:
 
     root_name = raw_graph[
         "root"
@@ -2368,15 +2349,16 @@ def convert_to_fl_graph(
             )
         )
 
-    return (
-        [
+    return FLGraph(
+        root_id=node_by_name[root_name].id,
+        nodes=[
             node_by_name[
                 name
             ]
             for name
             in ordered_names
         ],
-        edges,
+        edges=edges,
     )
 
 
@@ -2389,10 +2371,7 @@ def build_fl_graph_from_module(
     blueprint_module: str = "FLproof.BlueprintGraph",
     max_nodes: int | None = None,
     timeout: int = 180,
-) -> tuple[
-    list[FLNode],
-    list[FLEdge],
-]:
+) -> FLGraph:
 
     raw = build_raw_source_graph(
         project_path=project_path,
@@ -2437,32 +2416,19 @@ def _json_default(
 
 
 def graph_to_jsonable(
-    graph: tuple[
-        list[FLNode],
-        list[FLEdge],
-    ],
+    graph: FLGraph,
 ) -> dict[
     str,
     list[dict[str, Any]],
 ]:
 
-    nodes, edges = graph
-
     return {
         "nodes": [
-            asdict(
-                node
-            )
-            for node
-            in nodes
+            asdict(node) for node in graph.nodes
         ],
 
         "edges": [
-            asdict(
-                edge
-            )
-            for edge
-            in edges
+            asdict(edge) for edge in graph.edges
         ],
     }
 
