@@ -142,7 +142,7 @@ if __name__ == "__main__":
     config = JudgeConfig(
         model_name="gpt-5.2",
         provider=ModelProvider.OPENAI,
-        api_keys=APIKeys(openai_api_key="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"),
+        api_keys=APIKeys(openai_api_key=""),
         generation=GenerationConfig(
             temperature=0.0,
             max_tokens=4096,
