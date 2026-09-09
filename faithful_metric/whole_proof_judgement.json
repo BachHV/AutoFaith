@@ -4,7 +4,7 @@
   "score": 0.93,
   "strategy_match": true,
   "nl_strategy": "Direct proof: unpack evenness of a and b via witnesses, rewrite a+b, factor out 2, conclude divisibility by 2 hence even.",
-  "fl_strategy": "Direct proof in divisibility form: extract witnesses k,l from ha,hb, provide witness k+l for 2 ∣ a+b, then prove the required equality by rewriting and ring arithmetic.",
+  "fl_strategy": "Direct proof in divisibility form: extract witnesses k,l from ha,hb, choose witness k+l for 2 ∣ a+b, then prove a+b = 2*(k+l) by rewriting and ring.",
   "alignment": [
     {
       "nl_blocks": [
@@ -13,7 +13,7 @@
       "fl_blocks": [
         0
       ],
-      "match_score": 0.98,
+      "match_score": 1.0,
       "reason": "Both proofs eliminate the hypothesis that a is even/2∣a by introducing an integer witness k with a = 2k (Lean: rcases ha with ⟨k,hk⟩)."
     },
     {
@@ -23,8 +23,8 @@
       "fl_blocks": [
         1
       ],
-      "match_score": 0.98,
-      "reason": "Both similarly introduce an integer witness l (ℓ) with b = 2l from evenness/2∣b (Lean: rcases hb with ⟨l,hl⟩)."
+      "match_score": 1.0,
+      "reason": "Both similarly introduce an integer witness l (ℓ) with b = 2l from b even/2∣b (Lean: rcases hb with ⟨l,hl⟩)."
     },
     {
       "nl_blocks": [
@@ -35,7 +35,7 @@
         3
       ],
       "match_score": 0.9,
-      "reason": "NL computes a+b = 2k+2l = 2(k+l). Lean first chooses the witness k+l for the divisibility goal (use k+l), reducing to proving a+b = 2*(k+l), then proves that equality via a calc block (rw [hk,hl] then ring), matching the same algebraic content though split across steps."
+      "reason": "NL computes a+b = 2k+2ℓ = 2(k+ℓ). Formally, Lean first sets the divisibility witness to k+l (use k+l), reducing the goal to a+b = 2*(k+l), then proves that equality via calc (rw [hk,hl] and ring). Same mathematical content, but Lean introduces the witness before finishing the algebraic calculation."
     },
     {
       "nl_blocks": [
@@ -47,10 +47,10 @@
         3
       ],
       "match_score": 0.85,
-      "reason": "NL explicitly states that since k+ℓ is an integer, a+b is divisible by 2 and hence even. Lean encodes this implicitly: providing witness k+l and proving a+b = 2*(k+l) is exactly the definition of 2 ∣ a+b, so the final 'hence even' is not a separate step in Lean but is the same conclusion."
+      "reason": "NL concludes from a+b = 2(k+ℓ) (with k+ℓ integer) that 2 divides a+b, hence a+b is even. Lean’s corresponding conclusion is encoded by the combination of choosing witness k+l and proving the required equality; it does not separately state 'k+l is an integer' or 'divisible by 2' as intermediate facts."
     }
   ],
   "unmatched_nl_blocks": [],
   "unmatched_fl_blocks": [],
-  "summary": "The NL proof and Lean proof use the same direct witness-based strategy for evenness/divisibility: extract k,l, show a+b equals 2*(k+l), and conclude 2 divides the sum. Minor mismatch is that NL adds an explicit intermediate statement about divisibility/integers, while Lean treats this as definitional once the witness and equality are provided."
+  "summary": "The proofs share the same direct-witness strategy: extract k,l from evenness/divisibility assumptions, express a+b as 2*(k+l), and conclude 2 ∣ a+b. The only notable difference is ordering/packaging: Lean selects the witness (use k+l) before completing the algebra, while the NL proof performs the algebra first and then infers divisibility/evenness. This is a minor presentational mismatch, not a substantive change in reasoning."
 }

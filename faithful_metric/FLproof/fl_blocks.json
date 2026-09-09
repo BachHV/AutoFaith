@@ -1,167 +1,259 @@
 {
   "blocks": [
     {
-      "kind": "leaf",
-      "block": {
-        "previous_checkpoint": {
-          "premises": [
-            "a b : ℤ",
-            "ha : 2 ∣ a",
-            "hb : 2 ∣ b"
-          ],
-          "goal": [
-            "2 ∣ a + b"
-          ]
-        },
-        "arguments": [
-          "rcases ha with ⟨k, hk⟩"
-        ],
-        "next_checkpoint": {
-          "premises": [
-            "a b : ℤ",
-            "hb : 2 ∣ b",
-            "k : ℤ",
-            "hk : a = 2 * k"
-          ],
-          "goal": [
-            "2 ∣ a + b"
-          ]
-        }
-      },
-      "children": []
-    },
-    {
-      "kind": "leaf",
-      "block": {
-        "previous_checkpoint": {
-          "premises": [
-            "a b : ℤ",
-            "hb : 2 ∣ b",
-            "k : ℤ",
-            "hk : a = 2 * k"
-          ],
-          "goal": [
-            "2 ∣ a + b"
-          ]
-        },
-        "arguments": [
-          "rcases hb with ⟨l, hl⟩"
-        ],
-        "next_checkpoint": {
-          "premises": [
-            "a b k : ℤ",
-            "hk : a = 2 * k",
-            "l : ℤ",
-            "hl : b = 2 * l"
-          ],
-          "goal": [
-            "2 ∣ a + b"
-          ]
-        }
-      },
-      "children": []
-    },
-    {
-      "kind": "leaf",
-      "block": {
-        "previous_checkpoint": {
-          "premises": [
-            "a b k : ℤ",
-            "hk : a = 2 * k",
-            "l : ℤ",
-            "hl : b = 2 * l"
-          ],
-          "goal": [
-            "2 ∣ a + b"
-          ]
-        },
-        "arguments": [
-          "use k + l"
-        ],
-        "next_checkpoint": {
-          "premises": [
-            "a b k : ℤ",
-            "hk : a = 2 * k",
-            "l : ℤ",
-            "hl : b = 2 * l"
-          ],
-          "goal": [
-            "a + b = 2 * (k + l)"
-          ]
-        }
-      },
-      "children": []
-    },
-    {
       "kind": "compound",
       "block": {
         "previous_checkpoint": {
           "premises": [
-            "a b k : ℤ",
-            "hk : a = 2 * k",
-            "l : ℤ",
-            "hl : b = 2 * l"
+            "p q : Prop",
+            "inst✝ : Decidable p",
+            "hq : q"
           ],
           "goal": [
-            "a + b = 2 * (k + l)"
+            "p ∧ q ∨ ¬p ∧ q"
           ]
         },
         "arguments": [
-          "calc\n  a + b = 2 * k + 2 * l := by rw [hk, hl]\n  _ = 2 * (k + l) := by ring"
+          "by_cases hp : p"
         ],
         "next_checkpoint": {
-          "premises": [],
-          "goal": []
+          "premises": [
+            "p q : Prop",
+            "inst✝ : Decidable p",
+            "hq : q"
+          ],
+          "goal": [
+            "p ∧ q ∨ ¬p ∧ q",
+            "p ∧ q ∨ ¬p ∧ q"
+          ]
         }
       },
       "children": [
         {
-          "kind": "leaf",
+          "kind": "compound",
           "block": {
             "previous_checkpoint": {
               "premises": [
-                "a b k : ℤ",
-                "hk : a = 2 * k",
-                "l : ℤ",
-                "hl : b = 2 * l"
+                "p q : Prop",
+                "inst✝ : Decidable p",
+                "hq : q",
+                "hp : p"
               ],
               "goal": [
-                "a + b = 2 * k + 2 * l"
+                "p ∧ q ∨ ¬p ∧ q"
               ]
             },
             "arguments": [
-              "rw [hk, hl]"
+              "left"
             ],
             "next_checkpoint": {
-              "premises": [],
-              "goal": []
+              "premises": [
+                "p q : Prop",
+                "inst✝ : Decidable p",
+                "hq : q",
+                "hp : p"
+              ],
+              "goal": [
+                "p ∧ q"
+              ]
             }
           },
-          "children": []
+          "children": [
+            {
+              "kind": "compound",
+              "block": {
+                "previous_checkpoint": {
+                  "premises": [
+                    "p q : Prop",
+                    "inst✝ : Decidable p",
+                    "hq : q",
+                    "hp : p"
+                  ],
+                  "goal": [
+                    "p ∧ q"
+                  ]
+                },
+                "arguments": [
+                  "constructor"
+                ],
+                "next_checkpoint": {
+                  "premises": [
+                    "p q : Prop",
+                    "inst✝ : Decidable p",
+                    "hq : q",
+                    "hp : p"
+                  ],
+                  "goal": [
+                    "p",
+                    "q"
+                  ]
+                }
+              },
+              "children": [
+                {
+                  "kind": "leaf",
+                  "block": {
+                    "previous_checkpoint": {
+                      "premises": [
+                        "p q : Prop",
+                        "inst✝ : Decidable p",
+                        "hq : q",
+                        "hp : p"
+                      ],
+                      "goal": [
+                        "p"
+                      ]
+                    },
+                    "arguments": [
+                      "exact hp"
+                    ],
+                    "next_checkpoint": {
+                      "premises": [],
+                      "goal": []
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "kind": "leaf",
+                  "block": {
+                    "previous_checkpoint": {
+                      "premises": [
+                        "p q : Prop",
+                        "inst✝ : Decidable p",
+                        "hq : q",
+                        "hp : p"
+                      ],
+                      "goal": [
+                        "q"
+                      ]
+                    },
+                    "arguments": [
+                      "exact hq"
+                    ],
+                    "next_checkpoint": {
+                      "premises": [],
+                      "goal": []
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
         },
         {
-          "kind": "leaf",
+          "kind": "compound",
           "block": {
             "previous_checkpoint": {
               "premises": [
-                "a b k : ℤ",
-                "hk : a = 2 * k",
-                "l : ℤ",
-                "hl : b = 2 * l"
+                "p q : Prop",
+                "inst✝ : Decidable p",
+                "hq : q",
+                "hp : ¬p"
               ],
               "goal": [
-                "2 * k + 2 * l = 2 * (k + l)"
+                "p ∧ q ∨ ¬p ∧ q"
               ]
             },
             "arguments": [
-              "ring"
+              "right"
             ],
             "next_checkpoint": {
-              "premises": [],
-              "goal": []
+              "premises": [
+                "p q : Prop",
+                "inst✝ : Decidable p",
+                "hq : q",
+                "hp : ¬p"
+              ],
+              "goal": [
+                "¬p ∧ q"
+              ]
             }
           },
-          "children": []
+          "children": [
+            {
+              "kind": "compound",
+              "block": {
+                "previous_checkpoint": {
+                  "premises": [
+                    "p q : Prop",
+                    "inst✝ : Decidable p",
+                    "hq : q",
+                    "hp : ¬p"
+                  ],
+                  "goal": [
+                    "¬p ∧ q"
+                  ]
+                },
+                "arguments": [
+                  "constructor"
+                ],
+                "next_checkpoint": {
+                  "premises": [
+                    "p q : Prop",
+                    "inst✝ : Decidable p",
+                    "hq : q",
+                    "hp : ¬p"
+                  ],
+                  "goal": [
+                    "¬p",
+                    "q"
+                  ]
+                }
+              },
+              "children": [
+                {
+                  "kind": "leaf",
+                  "block": {
+                    "previous_checkpoint": {
+                      "premises": [
+                        "p q : Prop",
+                        "inst✝ : Decidable p",
+                        "hq : q",
+                        "hp : ¬p"
+                      ],
+                      "goal": [
+                        "¬p"
+                      ]
+                    },
+                    "arguments": [
+                      "exact hp"
+                    ],
+                    "next_checkpoint": {
+                      "premises": [],
+                      "goal": []
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "kind": "leaf",
+                  "block": {
+                    "previous_checkpoint": {
+                      "premises": [
+                        "p q : Prop",
+                        "inst✝ : Decidable p",
+                        "hq : q",
+                        "hp : ¬p"
+                      ],
+                      "goal": [
+                        "q"
+                      ]
+                    },
+                    "arguments": [
+                      "exact hq"
+                    ],
+                    "next_checkpoint": {
+                      "premises": [],
+                      "goal": []
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
         }
       ]
     }

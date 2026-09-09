@@ -14,13 +14,13 @@ if __package__ in (None, ""):
 
     from general_judge_model import GeneralJudgeModel
     from judge_config import JudgeConfig
-    from scorer.checkpoints import Checkpoint, NLBlock, NLReasoningCategory
-    from scorer.prompt import NL_CHECKPOINT_GENERATION_PROMPT
+    from faithful_metric.checkpoints import Checkpoint, NLBlock, NLReasoningCategory
+    from faithful_metric.prompt import NL_CHECKPOINT_GENERATION_PROMPT
 else:
     from .general_judge_model import GeneralJudgeModel
     from .judge_config import JudgeConfig
-    from .scorer.checkpoints import Checkpoint, NLBlock, NLReasoningCategory
-    from .scorer.prompt import NL_CHECKPOINT_GENERATION_PROMPT
+    from .checkpoints import Checkpoint, NLBlock, NLReasoningCategory
+    from .prompt import NL_CHECKPOINT_GENERATION_PROMPT
 
 
 # ============================================================

@@ -15,23 +15,23 @@ if __package__ in (None, ""):
     try:
         from general_judge_model import GeneralJudgeModel
         from judge_config import JudgeConfig, ModelProvider, APIKeys, GenerationConfig
-        from scorer.checkpoints import NLBlock, FLBlock, FLTacticCategory
-        from scorer.prompt import WHOLE_PROOF_FAITHFULNESS_PROMPT
-        from FL_checkpoints import LeanREPL
+        from faithful_metric.checkpoints import NLBlock, FLBlock, FLTacticCategory
+        from faithful_metric.prompt import WHOLE_PROOF_FAITHFULNESS_PROMPT
+        from faithful_metric.fl_blocks import LeanREPL
         from NL_judge_model import JudgeModel
     except ImportError:
         from .general_judge_model import GeneralJudgeModel
         from .judge_config import JudgeConfig, ModelProvider, APIKeys, GenerationConfig
-        from .scorer.checkpoints import NLBlock, FLBlock, FLTacticCategory
-        from .scorer.prompt import WHOLE_PROOF_FAITHFULNESS_PROMPT
-        from .FL_checkpoints import LeanREPL
+        from .checkpoints import NLBlock, FLBlock, FLTacticCategory
+        from .prompt import WHOLE_PROOF_FAITHFULNESS_PROMPT
+        from .fl_blocks import LeanREPL
         from .NL_judge_model import JudgeModel
 else:
     from .general_judge_model import GeneralJudgeModel
     from .judge_config import JudgeConfig, ModelProvider, APIKeys, GenerationConfig
-    from .scorer.checkpoints import NLBlock, FLBlock, FLTacticCategory
-    from .scorer.prompt import WHOLE_PROOF_FAITHFULNESS_PROMPT
-    from .FL_checkpoints import LeanREPL
+    from .checkpoints import NLBlock, FLBlock, FLTacticCategory
+    from .prompt import WHOLE_PROOF_FAITHFULNESS_PROMPT
+    from .fl_blocks import LeanREPL
     from .NL_judge_model import JudgeModel
 
 
@@ -142,7 +142,7 @@ if __name__ == "__main__":
     config = JudgeConfig(
         model_name="gpt-5.2",
         provider=ModelProvider.OPENAI,
-        api_keys=APIKeys(openai_api_key="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"),
+        api_keys=APIKeys(openai_api_key=""),
         generation=GenerationConfig(
             temperature=0.0,
             max_tokens=4096,
@@ -152,26 +152,17 @@ if __name__ == "__main__":
 
     theorem_statement = r"""
     \begin{theorem}
-    Let $a,b \in \mathbb{Z}$. If $a$ and $b$ are even, then $a+b$ is even.
+        Let $a,b \in \mathbb{Z}$. If $a$ and $b$ are even, then $a+b$ is even.
     \end{theorem}
     """
 
     natural_language_proof = r"""
     \begin{proof}
-    Since $a$ is even, there exists an integer $k$ such that
-    \[
-    a = 2k.
-    \]
-    Similarly, since $b$ is even, there exists an integer $\ell$ such that
-    \[
-    b = 2\ell.
-    \]
-    Therefore,
-    \[
-    a+b = 2k + 2\ell = 2(k+\ell).
-    \]
-    Because $k+\ell$ is an integer, $a+b$ is divisible by $2$.
-    Hence $a+b$ is even.
+        Since $a$ is even, there exists an integer $k$ such that \[ a = 2k.\]
+        Similarly, since $b$ is even, there exists an integer $\ell$ such that \[ b = 2\ell.\]
+        Therefore, \[  a+b = 2k + 2\ell = 2(k+\ell).\]
+        Because $k+\ell$ is an integer, $a+b$ is divisible by $2$.
+        Hence $a+b$ is even.
     \end{proof}
     """    
 
