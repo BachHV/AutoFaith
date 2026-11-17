@@ -1,0 +1,82 @@
+theorem_id: square_plus_n_even
+model:      openrouter/anthropic/claude-sonnet-5.5
+run at:     2026-11-17 17:23:37
+statement:  For every integer n, n^2 + n is even.
+proof:      First we show that the product of two consecutive integers is even. Let k be an integer. One of k and k+1 is even, so k(k+1) is even. Now n^2 + n = n(n+1). This is a product of two consecutive integers, hence n^2 + n is even.
+
+state 0 (start)
+  premise: (none)
+  goal:
+    - for every integer n, n^2 + n is even
+
+[1/3] state 0 -> 5: First we show that the product of two consecutive integers is even. Let k be an integer. One of k and k+1 is even, so k(k+1) is even.
+  + premise: for every integer k, k(k+1) is even   (proved as a claim below)
+  because:  one of two consecutive integers is even, so their product is even
+  claim: for every integer k, k(k+1) is even
+    state 1 (start)
+      premise: (none)
+      goal:
+        - for every integer k, k(k+1) is even
+
+    [1/3] state 1 -> 2: Let k be an integer.
+      + premise: k is an integer
+      - goal:    for every integer k, k(k+1) is even   (closed)
+      + goal:    k(k+1) is even
+      because:  fix an arbitrary integer k
+    -> state 2
+      premise:
+        - k is an integer
+      goal:
+        - k(k+1) is even
+
+    [2/3] state 2 -> 3: One of k and k+1 is even,
+      + premise: one of k and k+1 is even
+      because:  of two consecutive integers, one is even
+      uses:     k is an integer
+    -> state 3
+      premise:
+        - k is an integer
+        - one of k and k+1 is even
+      goal:
+        - k(k+1) is even
+
+    [3/3] state 3 -> 4: so k(k+1) is even.
+      - goal:    k(k+1) is even   (closed)
+      because:  a product with an even factor is even
+      uses:     one of k and k+1 is even
+    -> state 4   (all goals closed)
+      premise:
+        - k is an integer
+        - one of k and k+1 is even
+      goal: (none)
+  end of claim: for every integer k, k(k+1) is even
+-> state 5
+  premise:
+    - for every integer k, k(k+1) is even
+  goal:
+    - for every integer n, n^2 + n is even
+
+[2/3] state 5 -> 6: Now n^2 + n = n(n+1).
+  + premise: n is an integer
+  + premise: n^2 + n = n(n+1)
+  - goal:    for every integer n, n^2 + n is even   (closed)
+  + goal:    n^2 + n is even
+  because:  fix an arbitrary integer n; factor n^2 + n = n(n+1)
+-> state 6
+  premise:
+    - for every integer k, k(k+1) is even
+    - n is an integer
+    - n^2 + n = n(n+1)
+  goal:
+    - n^2 + n is even
+
+[3/3] state 6 -> 7: This is a product of two consecutive integers, hence n^2 + n is even.
+  - goal:    n^2 + n is even   (closed)
+  because:  n(n+1) is a product of consecutive integers, so it is even by the earlier result
+  uses:     for every integer k, k(k+1) is even; n^2 + n = n(n+1)
+-> state 7   (all goals closed)
+  premise:
+    - for every integer k, k(k+1) is even
+    - n is an integer
+    - n^2 + n = n(n+1)
+  goal: (none)

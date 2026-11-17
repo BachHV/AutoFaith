@@ -1,0 +1,73 @@
+theorem_id: odd_plus_odd
+model:      openrouter/anthropic/claude-sonnet-5.5
+run at:     2026-11-17 17:22:42
+statement:  The sum of two odd integers is even.
+proof:      Let a and b be odd integers. Write a = 2k + 1 and b = 2l + 1 for integers k and l. Then a + b = 2(k + l + 1). Hence a + b is even.
+
+state 0 (start)
+  premise: (none)
+  goal:
+    - the sum of two odd integers is even
+
+[1/4] state 0 -> 1: Let a and b be odd integers.
+  + premise: a and b are integers
+  + premise: a is odd
+  + premise: b is odd
+  - goal:    the sum of two odd integers is even   (closed)
+  + goal:    a + b is even
+  because:  to prove the statement for all pairs of odd integers, fix arbitrary odd integers a and b
+-> state 1
+  premise:
+    - a and b are integers
+    - a is odd
+    - b is odd
+  goal:
+    - a + b is even
+
+[2/4] state 1 -> 2: Write a = 2k + 1 and b = 2l + 1 for integers k and l.
+  + premise: k and l are integers
+  + premise: a = 2k + 1
+  + premise: b = 2l + 1
+  because:  a and b are odd, so by definition each is twice an integer plus 1
+  uses:     a is odd; b is odd; definition of odd
+-> state 2
+  premise:
+    - a and b are integers
+    - a is odd
+    - b is odd
+    - k and l are integers
+    - a = 2k + 1
+    - b = 2l + 1
+  goal:
+    - a + b is even
+
+[3/4] state 2 -> 3: Then a + b = 2(k + l + 1).
+  + premise: a + b = 2(k + l + 1)
+  because:  a + b = 2k + 1 + 2l + 1 = 2(k + l + 1)
+  uses:     a = 2k + 1; b = 2l + 1
+-> state 3
+  premise:
+    - a and b are integers
+    - a is odd
+    - b is odd
+    - k and l are integers
+    - a = 2k + 1
+    - b = 2l + 1
+    - a + b = 2(k + l + 1)
+  goal:
+    - a + b is even
+
+[4/4] state 3 -> 4: Hence a + b is even.
+  - goal:    a + b is even   (closed)
+  because:  a + b is twice the integer k + l + 1, so it is even by definition
+  uses:     a + b = 2(k + l + 1); definition of even; k and l are integers
+-> state 4   (all goals closed)
+  premise:
+    - a and b are integers
+    - a is odd
+    - b is odd
+    - k and l are integers
+    - a = 2k + 1
+    - b = 2l + 1
+    - a + b = 2(k + l + 1)
+  goal: (none)

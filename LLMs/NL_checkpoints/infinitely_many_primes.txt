@@ -1,0 +1,82 @@
+theorem_id: infinitely_many_primes
+model:      openrouter/anthropic/claude-sonnet-5.5
+run at:     2026-11-17 17:23:14
+statement:  There are infinitely many prime numbers.
+proof:      Suppose there are only finitely many primes p_1, ..., p_n. Let N = p_1 p_2 ... p_n + 1. Since N > 1, N has a prime factor p. Then p is one of p_1, ..., p_n, so p divides p_1 p_2 ... p_n. Since p also divides N, p divides N - p_1 p_2 ... p_n = 1, which is impossible. Therefore there are infinitely many primes.
+
+state 0 (start)
+  premise: (none)
+  goal:
+    - there are infinitely many prime numbers
+
+[1/1] state 0 -> 6: Suppose there are only finitely many primes p_1, ..., p_n. Let N = p_1 p_2 ... p_n + 1. Since N > 1, N has a prime factor p. Then p is one of p_1, ..., p_n, so p divides p_1 p_2 ... p_n. Since p also divides N, p divides N - p_1 p_2 ... p_n = 1, which is impossible.
+  + premise: there are infinitely many prime numbers   (proved as a claim below)
+  - goal:    there are infinitely many prime numbers   (closed)
+  because:  assuming finitely many primes leads to a contradiction, so there are infinitely many primes
+  claim: there are infinitely many prime numbers   assuming ['there are only finitely many primes p_1, ..., p_n']
+    state 1 (start)
+      premise:
+        - there are only finitely many primes p_1, ..., p_n
+      goal:
+        - a contradiction
+
+    [1/4] state 1 -> 2: Let N = p_1 p_2 ... p_n + 1.
+      + premise: N = p_1 p_2 ... p_n + 1
+      because:  define N
+    -> state 2
+      premise:
+        - there are only finitely many primes p_1, ..., p_n
+        - N = p_1 p_2 ... p_n + 1
+      goal:
+        - a contradiction
+
+    [2/4] state 2 -> 3: Since N > 1, N has a prime factor p.
+      + premise: N > 1
+      + premise: p is a prime factor of N
+      because:  N = p_1 ... p_n + 1 ≥ 3 > 1, and every integer greater than 1 has a prime factor
+      uses:     N = p_1 p_2 ... p_n + 1
+    -> state 3
+      premise:
+        - there are only finitely many primes p_1, ..., p_n
+        - N = p_1 p_2 ... p_n + 1
+        - N > 1
+        - p is a prime factor of N
+      goal:
+        - a contradiction
+
+    [3/4] state 3 -> 4: Then p is one of p_1, ..., p_n, so p divides p_1 p_2 ... p_n.
+      + premise: p is one of p_1, ..., p_n
+      + premise: p divides p_1 p_2 ... p_n
+      because:  p is prime and p_1, ..., p_n are all the primes, so p is a factor of the product
+      uses:     p is a prime factor of N; there are only finitely many primes p_1, ..., p_n
+    -> state 4
+      premise:
+        - there are only finitely many primes p_1, ..., p_n
+        - N = p_1 p_2 ... p_n + 1
+        - N > 1
+        - p is a prime factor of N
+        - p is one of p_1, ..., p_n
+        - p divides p_1 p_2 ... p_n
+      goal:
+        - a contradiction
+
+    [4/4] state 4 -> 5: Since p also divides N, p divides N - p_1 p_2 ... p_n = 1, which is impossible.
+      + premise: p divides N - p_1 p_2 ... p_n = 1
+      - goal:    a contradiction   (closed)
+      because:  p divides both N and p_1 ... p_n so divides their difference, which is 1; but a prime p ≥ 2 cannot divide 1
+      uses:     N = p_1 p_2 ... p_n + 1; p divides p_1 p_2 ... p_n; p is a prime factor of N
+    -> state 5   (all goals closed)
+      premise:
+        - there are only finitely many primes p_1, ..., p_n
+        - N = p_1 p_2 ... p_n + 1
+        - N > 1
+        - p is a prime factor of N
+        - p is one of p_1, ..., p_n
+        - p divides p_1 p_2 ... p_n
+        - p divides N - p_1 p_2 ... p_n = 1
+      goal: (none)
+  end of claim: there are infinitely many prime numbers
+-> state 6   (all goals closed)
+  premise:
+    - there are infinitely many prime numbers
+  goal: (none)

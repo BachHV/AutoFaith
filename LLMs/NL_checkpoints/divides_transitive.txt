@@ -1,0 +1,77 @@
+theorem_id: divides_transitive
+model:      openrouter/anthropic/claude-sonnet-5.5
+run at:     2026-11-17 17:22:45
+statement:  For integers a, b, c, if a divides b and b divides c, then a divides c.
+proof:      Suppose a divides b and b divides c. Then b = am for some integer m, and c = bn for some integer n. Substituting, c = (am)n = a(mn). Since mn is an integer, a divides c.
+
+state 0 (start)
+  premise:
+    - a, b, c are integers
+  goal:
+    - if a divides b and b divides c, then a divides c
+
+[1/4] state 0 -> 1: Suppose a divides b and b divides c.
+  + premise: a divides b
+  + premise: b divides c
+  - goal:    if a divides b and b divides c, then a divides c   (closed)
+  + goal:    a divides c
+  because:  to prove an implication, assume the hypothesis and prove the conclusion
+-> state 1
+  premise:
+    - a, b, c are integers
+    - a divides b
+    - b divides c
+  goal:
+    - a divides c
+
+[2/4] state 1 -> 2: Then b = am for some integer m, and c = bn for some integer n.
+  + premise: m is an integer
+  + premise: b = am
+  + premise: n is an integer
+  + premise: c = bn
+  because:  by the definition of divisibility, a divides b gives b = am and b divides c gives c = bn
+  uses:     a divides b; b divides c; definition of divides
+-> state 2
+  premise:
+    - a, b, c are integers
+    - a divides b
+    - b divides c
+    - m is an integer
+    - b = am
+    - n is an integer
+    - c = bn
+  goal:
+    - a divides c
+
+[3/4] state 2 -> 3: Substituting, c = (am)n = a(mn).
+  + premise: c = a(mn)
+  because:  substitute b = am into c = bn and use associativity of multiplication
+  uses:     b = am; c = bn
+-> state 3
+  premise:
+    - a, b, c are integers
+    - a divides b
+    - b divides c
+    - m is an integer
+    - b = am
+    - n is an integer
+    - c = bn
+    - c = a(mn)
+  goal:
+    - a divides c
+
+[4/4] state 3 -> 4: Since mn is an integer, a divides c.
+  - goal:    a divides c   (closed)
+  because:  mn is an integer as a product of integers, and c = a(mn), so a divides c by definition
+  uses:     c = a(mn); definition of divides; m is an integer; n is an integer
+-> state 4   (all goals closed)
+  premise:
+    - a, b, c are integers
+    - a divides b
+    - b divides c
+    - m is an integer
+    - b = am
+    - n is an integer
+    - c = bn
+    - c = a(mn)
+  goal: (none)

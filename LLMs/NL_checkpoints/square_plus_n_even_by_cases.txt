@@ -1,0 +1,96 @@
+theorem_id: square_plus_n_even_by_cases
+model:      openrouter/anthropic/claude-sonnet-5.5
+run at:     2026-11-17 17:22:55
+statement:  For every integer n, n^2 + n is even.
+proof:      Let n be an integer. If n is even, then n^2 and n are both even, so n^2 + n is even. If n is odd, then n^2 and n are both odd, so n^2 + n is even.
+
+state 0 (start)
+  premise: (none)
+  goal:
+    - for every integer n, n^2 + n is even
+
+[1/2] state 0 -> 1: Let n be an integer.
+  + premise: n is an integer
+  - goal:    for every integer n, n^2 + n is even   (closed)
+  + goal:    n^2 + n is even
+  because:  to prove the statement for every integer n, fix an arbitrary one
+-> state 1
+  premise:
+    - n is an integer
+  goal:
+    - n^2 + n is even
+
+[2/2] state 1 -> 8: If n is even, then n^2 and n are both even, so n^2 + n is even. If n is odd, then n^2 and n are both odd, so n^2 + n is even.
+  + premise: if n is even, then n^2 + n is even   (proved as a claim below)
+  + premise: if n is odd, then n^2 + n is even   (proved as a claim below)
+  - goal:    n^2 + n is even   (closed)
+  because:  every integer is even or odd, and n^2 + n is even in both cases
+  uses:     n is an integer
+  claim: if n is even, then n^2 + n is even   assuming ['n is even']
+    state 2 (start)
+      premise:
+        - n is an integer
+        - n is even
+      goal:
+        - n^2 + n is even
+
+    [1/2] state 2 -> 3: If n is even, then n^2 and n are both even,
+      + premise: n^2 is even
+      because:  n is even, and n^2 = n·n has an even factor, so it is even
+      uses:     n is even
+    -> state 3
+      premise:
+        - n is an integer
+        - n is even
+        - n^2 is even
+      goal:
+        - n^2 + n is even
+
+    [2/2] state 3 -> 4: so n^2 + n is even.
+      - goal:    n^2 + n is even   (closed)
+      because:  a sum of two even integers is even
+      uses:     n is even; n^2 is even
+    -> state 4   (all goals closed)
+      premise:
+        - n is an integer
+        - n is even
+        - n^2 is even
+      goal: (none)
+  end of claim: if n is even, then n^2 + n is even
+  claim: if n is odd, then n^2 + n is even   assuming ['n is odd']
+    state 5 (start)
+      premise:
+        - n is an integer
+        - n is odd
+      goal:
+        - n^2 + n is even
+
+    [1/2] state 5 -> 6: If n is odd, then n^2 and n are both odd,
+      + premise: n^2 is odd
+      because:  a product of odd integers is odd, so n^2 = n·n is odd
+      uses:     n is odd
+    -> state 6
+      premise:
+        - n is an integer
+        - n is odd
+        - n^2 is odd
+      goal:
+        - n^2 + n is even
+
+    [2/2] state 6 -> 7: so n^2 + n is even.
+      - goal:    n^2 + n is even   (closed)
+      because:  a sum of two odd integers is even
+      uses:     n is odd; n^2 is odd
+    -> state 7   (all goals closed)
+      premise:
+        - n is an integer
+        - n is odd
+        - n^2 is odd
+      goal: (none)
+  end of claim: if n is odd, then n^2 + n is even
+-> state 8   (all goals closed)
+  premise:
+    - n is an integer
+    - if n is even, then n^2 + n is even
+    - if n is odd, then n^2 + n is even
+  goal: (none)

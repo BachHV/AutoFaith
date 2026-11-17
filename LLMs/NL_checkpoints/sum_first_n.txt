@@ -1,0 +1,54 @@
+theorem_id: sum_first_n
+model:      openrouter/anthropic/claude-sonnet-5.5
+run at:     2026-11-17 17:23:19
+statement:  For every positive integer n, 1 + 2 + ... + n = n(n+1)/2.
+proof:      We proceed by induction on n. For n = 1, the left side is 1 and the right side is 1(2)/2 = 1. Now suppose 1 + 2 + ... + k = k(k+1)/2 for some positive integer k. Then 1 + 2 + ... + k + (k+1) = k(k+1)/2 + (k+1) = (k+1)(k+2)/2, which is the formula for n = k + 1. By induction, the formula holds for every positive integer n.
+
+state 0 (start)
+  premise: (none)
+  goal:
+    - for every positive integer n, 1 + 2 + ... + n = n(n+1)/2
+
+[1/1] state 0 -> 5: We proceed by induction on n. For n = 1, the left side is 1 and the right side is 1(2)/2 = 1. Now suppose 1 + 2 + ... + k = k(k+1)/2 for some positive integer k. Then 1 + 2 + ... + k + (k+1) = k(k+1)/2 + (k+1) = (k+1)(k+2)/2, which is the formula for n = k + 1.
+  + premise: the formula holds for n = 1   (proved as a claim below)
+  + premise: for every positive integer k, if 1 + 2 + ... + k = k(k+1)/2 then 1 + 2 + ... + (k+1) = (k+1)(k+2)/2   (proved as a claim below)
+  - goal:    for every positive integer n, 1 + 2 + ... + n = n(n+1)/2   (closed)
+  because:  the formula holds for n = 1, and if it holds for k it holds for k + 1, so by induction it holds for every positive integer n
+  claim: the formula holds for n = 1
+    state 1 (start)
+      premise: (none)
+      goal:
+        - 1 = 1(1+1)/2
+
+    [1/1] state 1 -> 2: For n = 1, the left side is 1 and the right side is 1(2)/2 = 1.
+      - goal:    1 = 1(1+1)/2   (closed)
+      because:  the left side is 1 and the right side is 1(2)/2 = 1
+    -> state 2   (all goals closed)
+      premise: (none)
+      goal: (none)
+  end of claim: the formula holds for n = 1
+  claim: for every positive integer k, if 1 + 2 + ... + k = k(k+1)/2 then 1 + 2 + ... + (k+1) = (k+1)(k+2)/2   assuming ['k is a positive integer', '1 + 2 + ... + k = k(k+1)/2']
+    state 3 (start)
+      premise:
+        - k is a positive integer
+        - 1 + 2 + ... + k = k(k+1)/2
+      goal:
+        - 1 + 2 + ... + (k+1) = (k+1)(k+2)/2
+
+    [1/1] state 3 -> 4: Then 1 + 2 + ... + k + (k+1) = k(k+1)/2 + (k+1) = (k+1)(k+2)/2, which is the formula for n = k + 1.
+      + premise: 1 + 2 + ... + k + (k+1) = k(k+1)/2 + (k+1) = (k+1)(k+2)/2
+      - goal:    1 + 2 + ... + (k+1) = (k+1)(k+2)/2   (closed)
+      because:  apply the induction hypothesis to the first k terms, then k(k+1)/2 + (k+1) = (k+1)(k+2)/2 by factoring
+      uses:     1 + 2 + ... + k = k(k+1)/2
+    -> state 4   (all goals closed)
+      premise:
+        - k is a positive integer
+        - 1 + 2 + ... + k = k(k+1)/2
+        - 1 + 2 + ... + k + (k+1) = k(k+1)/2 + (k+1) = (k+1)(k+2)/2
+      goal: (none)
+  end of claim: for every positive integer k, if 1 + 2 + ... + k = k(k+1)/2 then 1 + 2 + ... + (k+1) = (k+1)(k+2)/2
+-> state 5   (all goals closed)
+  premise:
+    - the formula holds for n = 1
+    - for every positive integer k, if 1 + 2 + ... + k = k(k+1)/2 then 1 + 2 + ... + (k+1) = (k+1)(k+2)/2
+  goal: (none)

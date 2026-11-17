@@ -1,0 +1,73 @@
+theorem_id: three_divides_n_cubed_minus_n
+model:      openrouter/anthropic/claude-sonnet-5.5
+run at:     2026-11-17 17:23:32
+statement:  For every natural number n, 3 divides n^3 - n.
+proof:      We use induction on n. When n = 0, n^3 - n = 0, which is divisible by 3. Assume 3 divides k^3 - k for some natural number k. Then (k+1)^3 - (k+1) = (k^3 - k) + 3(k^2 + k). Both terms are divisible by 3, so 3 divides (k+1)^3 - (k+1). This completes the induction.
+
+state 0 (start)
+  premise:
+    - n is a natural number
+  goal:
+    - for every natural number n, 3 divides n^3 - n
+
+[1/1] state 0 -> 6: We use induction on n. When n = 0, n^3 - n = 0, which is divisible by 3. Assume 3 divides k^3 - k for some natural number k. Then (k+1)^3 - (k+1) = (k^3 - k) + 3(k^2 + k). Both terms are divisible by 3, so 3 divides (k+1)^3 - (k+1).
+  + premise: 3 divides 0^3 - 0   (proved as a claim below)
+  + premise: for every natural number k, if 3 divides k^3 - k then 3 divides (k+1)^3 - (k+1)   (proved as a claim below)
+  - goal:    for every natural number n, 3 divides n^3 - n   (closed)
+  because:  the base case n = 0 and the inductive step from k to k+1 together prove the statement for all natural numbers by induction
+  claim: 3 divides 0^3 - 0
+    state 1 (start)
+      premise:
+        - n is a natural number
+      goal:
+        - 3 divides 0^3 - 0
+
+    [1/1] state 1 -> 2: When n = 0, n^3 - n = 0, which is divisible by 3.
+      + premise: 0^3 - 0 = 0
+      - goal:    3 divides 0^3 - 0   (closed)
+      because:  0^3 - 0 = 0 and 0 = 3 * 0 is divisible by 3
+    -> state 2   (all goals closed)
+      premise:
+        - n is a natural number
+        - 0^3 - 0 = 0
+      goal: (none)
+  end of claim: 3 divides 0^3 - 0
+  claim: for every natural number k, if 3 divides k^3 - k then 3 divides (k+1)^3 - (k+1)   assuming ['k is a natural number', '3 divides k^3 - k']
+    state 3 (start)
+      premise:
+        - n is a natural number
+        - k is a natural number
+        - 3 divides k^3 - k
+      goal:
+        - 3 divides (k+1)^3 - (k+1)
+
+    [1/2] state 3 -> 4: Then (k+1)^3 - (k+1) = (k^3 - k) + 3(k^2 + k).
+      + premise: (k+1)^3 - (k+1) = (k^3 - k) + 3(k^2 + k)
+      because:  (k+1)^3 - (k+1) = k^3 + 3k^2 + 3k + 1 - k - 1 = (k^3 - k) + 3(k^2 + k)
+    -> state 4
+      premise:
+        - n is a natural number
+        - k is a natural number
+        - 3 divides k^3 - k
+        - (k+1)^3 - (k+1) = (k^3 - k) + 3(k^2 + k)
+      goal:
+        - 3 divides (k+1)^3 - (k+1)
+
+    [2/2] state 4 -> 5: Both terms are divisible by 3, so 3 divides (k+1)^3 - (k+1).
+      - goal:    3 divides (k+1)^3 - (k+1)   (closed)
+      because:  k^3 - k is divisible by 3 by the induction hypothesis, 3(k^2 + k) is a multiple of 3, and a sum of multiples of 3 is a multiple of 3
+      uses:     (k+1)^3 - (k+1) = (k^3 - k) + 3(k^2 + k); 3 divides k^3 - k
+    -> state 5   (all goals closed)
+      premise:
+        - n is a natural number
+        - k is a natural number
+        - 3 divides k^3 - k
+        - (k+1)^3 - (k+1) = (k^3 - k) + 3(k^2 + k)
+      goal: (none)
+  end of claim: for every natural number k, if 3 divides k^3 - k then 3 divides (k+1)^3 - (k+1)
+-> state 6   (all goals closed)
+  premise:
+    - n is a natural number
+    - 3 divides 0^3 - 0
+    - for every natural number k, if 3 divides k^3 - k then 3 divides (k+1)^3 - (k+1)
+  goal: (none)

@@ -1,0 +1,176 @@
+theorem_id: sqrt2_irrational
+model:      openrouter/anthropic/claude-sonnet-5.5
+run at:     2026-11-17 17:23:09
+statement:  $\sqrt{2}$ is irrational.
+proof:      Suppose, for contradiction, that $\sqrt{2}$ is rational. Then $\sqrt{2} = p/q$ for integers $p, q$ with $q \neq 0$ and $\gcd(p, q) = 1$. Squaring gives $p^2 = 2q^2$, so $p^2$ is even, and therefore $p$ is even. Write $p = 2r$. Then $4r^2 = 2q^2$, so $q^2 = 2r^2$, and therefore $q$ is even. Thus 2 divides both $p$ and $q$, contradicting $\gcd(p, q) = 1$. Hence $\sqrt{2}$ is irrational.
+
+state 0 (start)
+  premise: (none)
+  goal:
+    - $\sqrt{2}$ is irrational
+
+[1/1] state 0 -> 10: Suppose, for contradiction, that $\sqrt{2}$ is rational. Then $\sqrt{2} = p/q$ for integers $p, q$ with $q \neq 0$ and $\gcd(p, q) = 1$. Squaring gives $p^2 = 2q^2$, so $p^2$ is even, and therefore $p$ is even. Write $p = 2r$. Then $4r^2 = 2q^2$, so $q^2 = 2r^2$, and therefore $q$ is even. Thus 2 divides both $p$ and $q$, contradicting $\gcd(p, q) = 1$.
+  + premise: $\sqrt{2}$ is not rational   (proved as a claim below)
+  - goal:    $\sqrt{2}$ is irrational   (closed)
+  because:  assuming $\sqrt{2}$ is rational leads to a contradiction, so $\sqrt{2}$ is irrational
+  claim: $\sqrt{2}$ is not rational   assuming ['$\\sqrt{2}$ is rational']
+    state 1 (start)
+      premise:
+        - $\sqrt{2}$ is rational
+      goal:
+        - a contradiction
+
+    [1/8] state 1 -> 2: Then $\sqrt{2} = p/q$ for integers $p, q$ with $q \neq 0$ and $\gcd(p, q) = 1$.
+      + premise: $p, q$ are integers
+      + premise: $q \neq 0$
+      + premise: $\gcd(p, q) = 1$
+      + premise: $\sqrt{2} = p/q$
+      because:  every rational number can be written as a fraction in lowest terms
+      uses:     $\sqrt{2}$ is rational
+    -> state 2
+      premise:
+        - $\sqrt{2}$ is rational
+        - $p, q$ are integers
+        - $q \neq 0$
+        - $\gcd(p, q) = 1$
+        - $\sqrt{2} = p/q$
+      goal:
+        - a contradiction
+
+    [2/8] state 2 -> 3: Squaring gives $p^2 = 2q^2$,
+      + premise: $p^2 = 2q^2$
+      because:  squaring $\sqrt{2} = p/q$ gives $2 = p^2/q^2$, and $q \neq 0$
+      uses:     $\sqrt{2} = p/q$; $q \neq 0$
+    -> state 3
+      premise:
+        - $\sqrt{2}$ is rational
+        - $p, q$ are integers
+        - $q \neq 0$
+        - $\gcd(p, q) = 1$
+        - $\sqrt{2} = p/q$
+        - $p^2 = 2q^2$
+      goal:
+        - a contradiction
+
+    [3/8] state 3 -> 4: so $p^2$ is even,
+      + premise: $p^2$ is even
+      because:  $p^2 = 2q^2$ is twice an integer
+      uses:     $p^2 = 2q^2$
+    -> state 4
+      premise:
+        - $\sqrt{2}$ is rational
+        - $p, q$ are integers
+        - $q \neq 0$
+        - $\gcd(p, q) = 1$
+        - $\sqrt{2} = p/q$
+        - $p^2 = 2q^2$
+        - $p^2$ is even
+      goal:
+        - a contradiction
+
+    [4/8] state 4 -> 5: and therefore $p$ is even.
+      + premise: $p$ is even
+      because:  if $p$ were odd then $p^2$ would be odd
+      uses:     $p^2$ is even
+    -> state 5
+      premise:
+        - $\sqrt{2}$ is rational
+        - $p, q$ are integers
+        - $q \neq 0$
+        - $\gcd(p, q) = 1$
+        - $\sqrt{2} = p/q$
+        - $p^2 = 2q^2$
+        - $p^2$ is even
+        - $p$ is even
+      goal:
+        - a contradiction
+
+    [5/8] state 5 -> 6: Write $p = 2r$.
+      + premise: $r$ is an integer
+      + premise: $p = 2r$
+      because:  $p$ is even
+      uses:     $p$ is even
+    -> state 6
+      premise:
+        - $\sqrt{2}$ is rational
+        - $p, q$ are integers
+        - $q \neq 0$
+        - $\gcd(p, q) = 1$
+        - $\sqrt{2} = p/q$
+        - $p^2 = 2q^2$
+        - $p^2$ is even
+        - $p$ is even
+        - $r$ is an integer
+        - $p = 2r$
+      goal:
+        - a contradiction
+
+    [6/8] state 6 -> 7: Then $4r^2 = 2q^2$, so $q^2 = 2r^2$,
+      + premise: $4r^2 = 2q^2$
+      + premise: $q^2 = 2r^2$
+      because:  substitute $p = 2r$ into $p^2 = 2q^2$ and divide by 2
+      uses:     $p = 2r$; $p^2 = 2q^2$
+    -> state 7
+      premise:
+        - $\sqrt{2}$ is rational
+        - $p, q$ are integers
+        - $q \neq 0$
+        - $\gcd(p, q) = 1$
+        - $\sqrt{2} = p/q$
+        - $p^2 = 2q^2$
+        - $p^2$ is even
+        - $p$ is even
+        - $r$ is an integer
+        - $p = 2r$
+        - $4r^2 = 2q^2$
+        - $q^2 = 2r^2$
+      goal:
+        - a contradiction
+
+    [7/8] state 7 -> 8: and therefore $q$ is even.
+      + premise: $q$ is even
+      because:  $q^2$ is even, so $q$ is even, as for $p$
+      uses:     $q^2 = 2r^2$
+    -> state 8
+      premise:
+        - $\sqrt{2}$ is rational
+        - $p, q$ are integers
+        - $q \neq 0$
+        - $\gcd(p, q) = 1$
+        - $\sqrt{2} = p/q$
+        - $p^2 = 2q^2$
+        - $p^2$ is even
+        - $p$ is even
+        - $r$ is an integer
+        - $p = 2r$
+        - $4r^2 = 2q^2$
+        - $q^2 = 2r^2$
+        - $q$ is even
+      goal:
+        - a contradiction
+
+    [8/8] state 8 -> 9: Thus 2 divides both $p$ and $q$, contradicting $\gcd(p, q) = 1$.
+      - goal:    a contradiction   (closed)
+      because:  2 is a common divisor of $p$ and $q$, so $\gcd(p,q) \ge 2$
+      uses:     $\gcd(p, q) = 1$; $p$ is even; $q$ is even
+    -> state 9   (all goals closed)
+      premise:
+        - $\sqrt{2}$ is rational
+        - $p, q$ are integers
+        - $q \neq 0$
+        - $\gcd(p, q) = 1$
+        - $\sqrt{2} = p/q$
+        - $p^2 = 2q^2$
+        - $p^2$ is even
+        - $p$ is even
+        - $r$ is an integer
+        - $p = 2r$
+        - $4r^2 = 2q^2$
+        - $q^2 = 2r^2$
+        - $q$ is even
+      goal: (none)
+  end of claim: $\sqrt{2}$ is not rational
+-> state 10   (all goals closed)
+  premise:
+    - $\sqrt{2}$ is not rational
+  goal: (none)
