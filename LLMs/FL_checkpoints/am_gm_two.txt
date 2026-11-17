@@ -1,0 +1,83 @@
+theorem_id: am_gm_two
+language:   FL
+model:      openrouter/anthropic/claude-sonnet-5.5
+run at:     2026-11-17 17:59:36
+statement:  theorem am_gm_two (x y : ℝ) (hx : 0 ≤ x) (hy : 0 ≤ y) : Real.sqrt (x * y) ≤ (x + y) / 2
+proof:
+    by
+      have h : 0 ≤ (Real.sqrt x - Real.sqrt y) ^ 2 := sq_nonneg _
+      rw [Real.sqrt_mul hx y]
+      nlinarith [Real.sq_sqrt hx, Real.sq_sqrt hy]
+
+state 0 (start)
+  premise:
+    - x : ℝ
+    - y : ℝ
+    - hx : 0 ≤ x
+    - hy : 0 ≤ y
+  goal:
+    - Real.sqrt (x * y) ≤ (x + y) / 2
+
+[1/3] state 0 -> 3: have h : 0 ≤ (Real.sqrt x - Real.sqrt y) ^ 2 := sq_nonneg _
+  + premise: h : 0 ≤ (Real.sqrt x - Real.sqrt y) ^ 2   (proved as a claim below)
+  because:  a square of a real number is nonnegative
+  uses:     sq_nonneg
+  claim: h : 0 ≤ (Real.sqrt x - Real.sqrt y) ^ 2
+    state 1 (start)
+      premise:
+        - x : ℝ
+        - y : ℝ
+        - hx : 0 ≤ x
+        - hy : 0 ≤ y
+      goal:
+        - 0 ≤ (Real.sqrt x - Real.sqrt y) ^ 2
+
+    [1/1] state 1 -> 2: sq_nonneg _
+      - goal:    0 ≤ (Real.sqrt x - Real.sqrt y) ^ 2   (closed)
+      because:  sq_nonneg gives 0 ≤ a ^ 2 for any a
+      uses:     sq_nonneg
+    -> state 2   (all goals closed)
+      premise:
+        - x : ℝ
+        - y : ℝ
+        - hx : 0 ≤ x
+        - hy : 0 ≤ y
+      goal: (none)
+  end of claim: h : 0 ≤ (Real.sqrt x - Real.sqrt y) ^ 2
+-> state 3
+  premise:
+    - x : ℝ
+    - y : ℝ
+    - hx : 0 ≤ x
+    - hy : 0 ≤ y
+    - h : 0 ≤ (Real.sqrt x - Real.sqrt y) ^ 2
+  goal:
+    - Real.sqrt (x * y) ≤ (x + y) / 2
+
+[2/3] state 3 -> 4: rw [Real.sqrt_mul hx y]
+  - goal:    Real.sqrt (x * y) ≤ (x + y) / 2   (closed)
+  + goal:    Real.sqrt x * Real.sqrt y ≤ (x + y) / 2
+  because:  Real.sqrt_mul hx y states sqrt (x * y) = sqrt x * sqrt y for x ≥ 0
+  uses:     Real.sqrt_mul; hx
+-> state 4
+  premise:
+    - x : ℝ
+    - y : ℝ
+    - hx : 0 ≤ x
+    - hy : 0 ≤ y
+    - h : 0 ≤ (Real.sqrt x - Real.sqrt y) ^ 2
+  goal:
+    - Real.sqrt x * Real.sqrt y ≤ (x + y) / 2
+
+[3/3] state 4 -> 5: nlinarith [Real.sq_sqrt hx, Real.sq_sqrt hy]
+  - goal:    Real.sqrt x * Real.sqrt y ≤ (x + y) / 2   (closed)
+  because:  h expands to sqrt x ^ 2 - 2 sqrt x sqrt y + sqrt y ^ 2 ≥ 0; with sqrt x ^ 2 = x and sqrt y ^ 2 = y this gives 2 sqrt x sqrt y ≤ x + y, which is linear in these terms
+  uses:     Real.sq_sqrt; h; hx; hy
+-> state 5   (all goals closed)
+  premise:
+    - x : ℝ
+    - y : ℝ
+    - hx : 0 ≤ x
+    - hy : 0 ≤ y
+    - h : 0 ≤ (Real.sqrt x - Real.sqrt y) ^ 2
+  goal: (none)

@@ -426,6 +426,25 @@ def test_static_extractor_round_trip():
         assert len(extract_unit_checkpoints(CASES_ITEM, extractor)) == 2
 
 
+
+def test_fl_prompt_loads_and_its_examples_are_valid():
+    import llm, prompts
+    fl = prompts.prompt_for(ProofLanguage.FL)  # fails if the file name's case is wrong (Linux)
+    assert "{{" not in fl.system and "{{statement}}" in fl.user_template
+    sections = (Path(__file__).parent / "fl_unit_steps.prompt.md").read_text(encoding="utf-8").split("## Example ")[1:]
+    assert len(sections) == 2
+    for section in sections:
+        proof = re.search(r"Proof:\n```lean\n(.*?)```", section, re.S).group(1)
+        example = parse_raw_proof(llm.parse_json_object(section[section.index("```json"):]))
+        units = build_unit_checkpoints("example", ProofLanguage.FL, example, proof_text=proof)
+        assert compose(units).is_complete_proof
+
+
+def test_parse_json_object_accepts_uppercase_fence_and_skips_lean():
+    from llm import parse_json_object
+    assert parse_json_object('```JSON\n{"a": 1}\n```') == {"a": 1}
+    assert parse_json_object('```lean\nexample : {x | x = 1} = {1} := rfl\n```\n```json\n{"a": 1}\n```') == {"a": 1}
+
 if __name__ == "__main__":
     for name, fn in list(globals().items()):
         if name.startswith("test_") and callable(fn):

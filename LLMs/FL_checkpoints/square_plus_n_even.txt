@@ -1,0 +1,111 @@
+theorem_id: square_plus_n_even
+language:   FL
+model:      openrouter/anthropic/claude-sonnet-5.5
+run at:     2026-11-17 18:00:06
+statement:  theorem square_plus_n_even (n : ℤ) : Even (n ^ 2 + n)
+proof:
+    by
+      have h : ∀ k : ℤ, Even (k * (k + 1)) := by
+        intro k
+        exact Int.even_mul_succ_self k
+      have hn : n ^ 2 + n = n * (n + 1) := by ring
+      rw [hn]
+      exact h n
+
+state 0 (start)
+  premise:
+    - n : ℤ
+  goal:
+    - Even (n ^ 2 + n)
+
+[1/4] state 0 -> 4: have h : ∀ k : ℤ, Even (k * (k + 1)) := by intro k exact Int.even_mul_succ_self k
+  + premise: h : ∀ k : ℤ, Even (k * (k + 1))   (proved as a claim below)
+  because:  the product of an integer and its successor is even, by Int.even_mul_succ_self
+  uses:     Int.even_mul_succ_self
+  claim: h : ∀ k : ℤ, Even (k * (k + 1))
+    state 1 (start)
+      premise:
+        - n : ℤ
+      goal:
+        - ∀ k : ℤ, Even (k * (k + 1))
+
+    [1/2] state 1 -> 2: intro k
+      + premise: k : ℤ
+      - goal:    ∀ k : ℤ, Even (k * (k + 1))   (closed)
+      + goal:    Even (k * (k + 1))
+      because:  introduce the universally quantified variable k
+    -> state 2
+      premise:
+        - n : ℤ
+        - k : ℤ
+      goal:
+        - Even (k * (k + 1))
+
+    [2/2] state 2 -> 3: exact Int.even_mul_succ_self k
+      - goal:    Even (k * (k + 1))   (closed)
+      because:  Int.even_mul_succ_self k states Even (k * (k + 1))
+      uses:     Int.even_mul_succ_self
+    -> state 3   (all goals closed)
+      premise:
+        - n : ℤ
+        - k : ℤ
+      goal: (none)
+  end of claim: h : ∀ k : ℤ, Even (k * (k + 1))
+-> state 4
+  premise:
+    - n : ℤ
+    - h : ∀ k : ℤ, Even (k * (k + 1))
+  goal:
+    - Even (n ^ 2 + n)
+
+[2/4] state 4 -> 7: have hn : n ^ 2 + n = n * (n + 1) := by ring
+  + premise: hn : n ^ 2 + n = n * (n + 1)   (proved as a claim below)
+  because:  both sides expand to n^2 + n
+  claim: hn : n ^ 2 + n = n * (n + 1)
+    state 5 (start)
+      premise:
+        - n : ℤ
+        - h : ∀ k : ℤ, Even (k * (k + 1))
+      goal:
+        - n ^ 2 + n = n * (n + 1)
+
+    [1/1] state 5 -> 6: ring
+      - goal:    n ^ 2 + n = n * (n + 1)   (closed)
+      because:  commutative ring identity
+    -> state 6   (all goals closed)
+      premise:
+        - n : ℤ
+        - h : ∀ k : ℤ, Even (k * (k + 1))
+      goal: (none)
+  end of claim: hn : n ^ 2 + n = n * (n + 1)
+-> state 7
+  premise:
+    - n : ℤ
+    - h : ∀ k : ℤ, Even (k * (k + 1))
+    - hn : n ^ 2 + n = n * (n + 1)
+  goal:
+    - Even (n ^ 2 + n)
+
+[3/4] state 7 -> 8: rw [hn]
+  - goal:    Even (n ^ 2 + n)   (closed)
+  + goal:    Even (n * (n + 1))
+  because:  rewrite n ^ 2 + n as n * (n + 1) using hn
+  uses:     hn
+-> state 8
+  premise:
+    - n : ℤ
+    - h : ∀ k : ℤ, Even (k * (k + 1))
+    - hn : n ^ 2 + n = n * (n + 1)
+  goal:
+    - Even (n * (n + 1))
+
+[4/4] state 8 -> 9: exact h n
+  - goal:    Even (n * (n + 1))   (closed)
+  because:  h instantiated at n gives Even (n * (n + 1))
+  uses:     h
+-> state 9   (all goals closed)
+  premise:
+    - n : ℤ
+    - h : ∀ k : ℤ, Even (k * (k + 1))
+    - hn : n ^ 2 + n = n * (n + 1)
+  goal: (none)

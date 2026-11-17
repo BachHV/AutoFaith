@@ -1,0 +1,19 @@
+theorem_id: sqrt2_irrational
+language:   FL
+model:      openrouter/anthropic/claude-sonnet-5.5
+run at:     2026-11-17 17:59:53
+statement:  theorem sqrt2_irrational : Irrational (Real.sqrt 2)
+proof:      irrational_sqrt_two
+
+state 0 (start)
+  premise: (none)
+  goal:
+    - Irrational (Real.sqrt 2)
+
+[1/1] state 0 -> 1: irrational_sqrt_two
+  - goal:    Irrational (Real.sqrt 2)   (closed)
+  because:  The Mathlib lemma irrational_sqrt_two states exactly that Real.sqrt 2 is irrational, so the term closes the goal.
+  uses:     irrational_sqrt_two
+-> state 1   (all goals closed)
+  premise: (none)
+  goal: (none)

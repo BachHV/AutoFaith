@@ -1,0 +1,66 @@
+theorem_id: le_and_ne_zero
+language:   FL
+model:      openrouter/anthropic/claude-sonnet-5.5
+run at:     2026-11-17 17:59:39
+statement:  theorem le_and_ne_zero (n : ℕ) (h : 2 ≤ n) : 1 ≤ n ∧ n ≠ 0
+proof:
+    by
+      constructor
+      · omega
+      · omega
+
+state 0 (start)
+  premise:
+    - n : ℕ
+    - h : 2 ≤ n
+  goal:
+    - 1 ≤ n ∧ n ≠ 0
+
+[1/1] state 0 -> 5: constructor · omega · omega
+  + premise: 1 ≤ n   (proved as a claim below)
+  + premise: n ≠ 0   (proved as a claim below)
+  - goal:    1 ≤ n ∧ n ≠ 0   (closed)
+  because:  constructor splits the conjunction into the goals 1 ≤ n and n ≠ 0
+  claim: 1 ≤ n
+    state 1 (start)
+      premise:
+        - n : ℕ
+        - h : 2 ≤ n
+      goal:
+        - 1 ≤ n
+
+    [1/1] state 1 -> 2: omega
+      - goal:    1 ≤ n   (closed)
+      because:  from h, 2 ≤ n, so 1 ≤ n
+      uses:     h
+    -> state 2   (all goals closed)
+      premise:
+        - n : ℕ
+        - h : 2 ≤ n
+      goal: (none)
+  end of claim: 1 ≤ n
+  claim: n ≠ 0
+    state 3 (start)
+      premise:
+        - n : ℕ
+        - h : 2 ≤ n
+      goal:
+        - n ≠ 0
+
+    [1/1] state 3 -> 4: omega
+      - goal:    n ≠ 0   (closed)
+      because:  from h, 2 ≤ n, so n ≠ 0
+      uses:     h
+    -> state 4   (all goals closed)
+      premise:
+        - n : ℕ
+        - h : 2 ≤ n
+      goal: (none)
+  end of claim: n ≠ 0
+-> state 5   (all goals closed)
+  premise:
+    - n : ℕ
+    - h : 2 ≤ n
+    - 1 ≤ n
+    - n ≠ 0
+  goal: (none)

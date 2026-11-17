@@ -1,0 +1,42 @@
+theorem_id: infinitely_many_primes
+language:   FL
+model:      openrouter/anthropic/claude-sonnet-5.5
+run at:     2026-11-17 17:59:55
+statement:  theorem infinitely_many_primes (n : ℕ) : ∃ p, n ≤ p ∧ Nat.Prime p
+proof:
+    by
+      obtain ⟨p, hp, hprime⟩ := Nat.exists_infinite_primes n
+      exact ⟨p, hp, hprime⟩
+
+state 0 (start)
+  premise:
+    - n : ℕ
+  goal:
+    - ∃ p, n ≤ p ∧ Nat.Prime p
+
+[1/2] state 0 -> 1: obtain ⟨p, hp, hprime⟩ := Nat.exists_infinite_primes n
+  + premise: p : ℕ
+  + premise: hp : n ≤ p
+  + premise: hprime : Nat.Prime p
+  because:  Nat.exists_infinite_primes n gives ∃ p, n ≤ p ∧ Nat.Prime p; obtain destructs it into the witness p and its two properties
+  uses:     Nat.exists_infinite_primes
+-> state 1
+  premise:
+    - n : ℕ
+    - p : ℕ
+    - hp : n ≤ p
+    - hprime : Nat.Prime p
+  goal:
+    - ∃ p, n ≤ p ∧ Nat.Prime p
+
+[2/2] state 1 -> 2: exact ⟨p, hp, hprime⟩
+  - goal:    ∃ p, n ≤ p ∧ Nat.Prime p   (closed)
+  because:  p is a witness, with hp : n ≤ p and hprime : Nat.Prime p giving the conjunction
+  uses:     hp; hprime
+-> state 2   (all goals closed)
+  premise:
+    - n : ℕ
+    - p : ℕ
+    - hp : n ≤ p
+    - hprime : Nat.Prime p
+  goal: (none)

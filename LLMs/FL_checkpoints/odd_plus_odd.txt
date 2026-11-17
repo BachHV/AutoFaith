@@ -1,0 +1,109 @@
+theorem_id: odd_plus_odd
+language:   FL
+model:      openrouter/anthropic/claude-sonnet-5.5
+run at:     2026-11-17 17:59:25
+statement:  theorem odd_plus_odd (a b : ℤ) (ha : Odd a) (hb : Odd b) : Even (a + b)
+proof:
+    by
+      obtain ⟨k, hk⟩ := ha
+      obtain ⟨l, hl⟩ := hb
+      exact ⟨k + l + 1, by rw [hk, hl]; ring⟩
+
+state 0 (start)
+  premise:
+    - a : ℤ
+    - b : ℤ
+    - ha : Odd a
+    - hb : Odd b
+  goal:
+    - Even (a + b)
+
+[1/3] state 0 -> 1: obtain ⟨k, hk⟩ := ha
+  + premise: k : ℤ
+  + premise: hk : a = 2 * k + 1
+  - premise: ha : Odd a
+  because:  Odd a unfolds to ∃ m, a = 2 * m + 1; obtain takes the witness k and the equation hk
+  uses:     ha
+-> state 1
+  premise:
+    - a : ℤ
+    - b : ℤ
+    - hb : Odd b
+    - k : ℤ
+    - hk : a = 2 * k + 1
+  goal:
+    - Even (a + b)
+
+[2/3] state 1 -> 2: obtain ⟨l, hl⟩ := hb
+  + premise: l : ℤ
+  + premise: hl : b = 2 * l + 1
+  - premise: hb : Odd b
+  because:  Odd b unfolds to ∃ m, b = 2 * m + 1; obtain takes the witness l and the equation hl
+  uses:     hb
+-> state 2
+  premise:
+    - a : ℤ
+    - b : ℤ
+    - k : ℤ
+    - hk : a = 2 * k + 1
+    - l : ℤ
+    - hl : b = 2 * l + 1
+  goal:
+    - Even (a + b)
+
+[3/3] state 2 -> 6: exact ⟨k + l + 1, by rw [hk, hl]; ring⟩
+  + premise: a + b = (k + l + 1) + (k + l + 1)   (proved as a claim below)
+  - goal:    Even (a + b)   (closed)
+  because:  Even (a + b) means ∃ r, a + b = r + r; the witness k + l + 1 works, and the side goal is proved by the nested by block
+  uses:     hk; hl
+  claim: a + b = (k + l + 1) + (k + l + 1)
+    state 3 (start)
+      premise:
+        - a : ℤ
+        - b : ℤ
+        - k : ℤ
+        - hk : a = 2 * k + 1
+        - l : ℤ
+        - hl : b = 2 * l + 1
+      goal:
+        - a + b = (k + l + 1) + (k + l + 1)
+
+    [1/2] state 3 -> 4: rw [hk, hl]
+      - goal:    a + b = (k + l + 1) + (k + l + 1)   (closed)
+      + goal:    2 * k + 1 + (2 * l + 1) = k + l + 1 + (k + l + 1)
+      because:  rewrite a as 2 * k + 1 and b as 2 * l + 1
+      uses:     hk; hl
+    -> state 4
+      premise:
+        - a : ℤ
+        - b : ℤ
+        - k : ℤ
+        - hk : a = 2 * k + 1
+        - l : ℤ
+        - hl : b = 2 * l + 1
+      goal:
+        - 2 * k + 1 + (2 * l + 1) = k + l + 1 + (k + l + 1)
+
+    [2/2] state 4 -> 5: ring
+      - goal:    2 * k + 1 + (2 * l + 1) = k + l + 1 + (k + l + 1)   (closed)
+      because:  both sides equal 2 * k + 2 * l + 2
+    -> state 5   (all goals closed)
+      premise:
+        - a : ℤ
+        - b : ℤ
+        - k : ℤ
+        - hk : a = 2 * k + 1
+        - l : ℤ
+        - hl : b = 2 * l + 1
+      goal: (none)
+  end of claim: a + b = (k + l + 1) + (k + l + 1)
+-> state 6   (all goals closed)
+  premise:
+    - a : ℤ
+    - b : ℤ
+    - k : ℤ
+    - hk : a = 2 * k + 1
+    - l : ℤ
+    - hl : b = 2 * l + 1
+    - a + b = (k + l + 1) + (k + l + 1)
+  goal: (none)

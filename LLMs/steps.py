@@ -222,17 +222,20 @@ def _build(ctx: _Ctx, start: State, steps: list[RawStep], where: str) -> list[Ch
 
         premises, goals = list(state.premise), list(state.goal)
         _remove(premises, step.remove_premises, "remove", "premise", errs)
+        # Claims start from the premises before this step minus the ones it consumes
+        # (e.g. Lean's `induction n` removes `n : ℕ`, `rcases h with h₁ | h₂` removes h).
+        inherited = list(premises)
         _add(premises, step.add_premises)
         at = _remove(goals, step.close_goals, "close", "goal", errs)
         # New goals take the place of the goal they came from; otherwise they go first.
         _add(goals, step.add_goals, at=at if at is not None else 0)
 
-        # Claims: each is proved in its own State (premises available before
-        # this step + its own local premises), so its assumptions stay inside it.
+        # Claims: each is proved in its own State (inherited premises + its own
+        # local premises), so its assumptions stay inside it.
         claims: list[tuple[str, State]] = []
         claim_proofs: list[Checkpoint | None] = []
         for j, claim in enumerate(step.claims):
-            local = list(state.premise)
+            local = list(inherited)
             _add(local, claim.premise)
             claim_state = ctx.new_state(local, claim.goal)
             claims.append((claim.statement, claim_state))

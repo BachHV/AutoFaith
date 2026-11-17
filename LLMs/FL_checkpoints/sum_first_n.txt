@@ -1,0 +1,72 @@
+theorem_id: sum_first_n
+language:   FL
+model:      openrouter/anthropic/claude-sonnet-5.5
+run at:     2026-11-17 18:00:01
+statement:  theorem sum_first_n (n : ℕ) : 2 * ∑ i ∈ Finset.range (n + 1), i = n * (n + 1)
+proof:
+    by
+      induction n with
+      | zero => simp
+      | succ k ih =>
+        rw [Finset.sum_range_succ, mul_add, ih]
+        ring
+
+state 0 (start)
+  premise:
+    - n : ℕ
+  goal:
+    - 2 * ∑ i ∈ Finset.range (n + 1), i = n * (n + 1)
+
+[1/1] state 0 -> 6: induction n with | zero => simp | succ k ih => rw [Finset.sum_range_succ, mul_add, ih] ring
+  + premise: 2 * ∑ i ∈ Finset.range (0 + 1), i = 0 * (0 + 1)   (proved as a claim below)
+  + premise: ∀ k : ℕ, 2 * ∑ i ∈ Finset.range (k + 1), i = k * (k + 1) → 2 * ∑ i ∈ Finset.range (k + 1 + 1), i = (k + 1) * (k + 1 + 1)   (proved as a claim below)
+  - premise: n : ℕ
+  - goal:    2 * ∑ i ∈ Finset.range (n + 1), i = n * (n + 1)   (closed)
+  because:  induction on n: base case n = 0, and step from k to k + 1
+  claim: 2 * ∑ i ∈ Finset.range (0 + 1), i = 0 * (0 + 1)
+    state 1 (start)
+      premise: (none)
+      goal:
+        - 2 * ∑ i ∈ Finset.range (0 + 1), i = 0 * (0 + 1)
+
+    [1/1] state 1 -> 2: simp
+      - goal:    2 * ∑ i ∈ Finset.range (0 + 1), i = 0 * (0 + 1)   (closed)
+      because:  the sum over range 1 is 0 and the right side is 0 * 1 = 0, so simp closes it
+    -> state 2   (all goals closed)
+      premise: (none)
+      goal: (none)
+  end of claim: 2 * ∑ i ∈ Finset.range (0 + 1), i = 0 * (0 + 1)
+  claim: ∀ k : ℕ, 2 * ∑ i ∈ Finset.range (k + 1), i = k * (k + 1) → 2 * ∑ i ∈ Finset.range (k + 1 + 1), i = (k + 1) * (k + 1 + 1)   assuming ['k : ℕ', 'ih : 2 * ∑ i ∈ Finset.range (k + 1), i = k * (k + 1)']
+    state 3 (start)
+      premise:
+        - k : ℕ
+        - ih : 2 * ∑ i ∈ Finset.range (k + 1), i = k * (k + 1)
+      goal:
+        - 2 * ∑ i ∈ Finset.range (k + 1 + 1), i = (k + 1) * (k + 1 + 1)
+
+    [1/2] state 3 -> 4: rw [Finset.sum_range_succ, mul_add, ih]
+      - goal:    2 * ∑ i ∈ Finset.range (k + 1 + 1), i = (k + 1) * (k + 1 + 1)   (closed)
+      + goal:    k * (k + 1) + 2 * (k + 1) = (k + 1) * (k + 1 + 1)
+      because:  Finset.sum_range_succ splits off the last term k + 1; mul_add distributes 2 over the sum plus the term; ih rewrites 2 * ∑ i ∈ range (k + 1), i as k * (k + 1)
+      uses:     Finset.sum_range_succ; ih; mul_add
+    -> state 4
+      premise:
+        - k : ℕ
+        - ih : 2 * ∑ i ∈ Finset.range (k + 1), i = k * (k + 1)
+      goal:
+        - k * (k + 1) + 2 * (k + 1) = (k + 1) * (k + 1 + 1)
+
+    [2/2] state 4 -> 5: ring
+      - goal:    k * (k + 1) + 2 * (k + 1) = (k + 1) * (k + 1 + 1)   (closed)
+      because:  both sides expand to k^2 + 3k + 2
+    -> state 5   (all goals closed)
+      premise:
+        - k : ℕ
+        - ih : 2 * ∑ i ∈ Finset.range (k + 1), i = k * (k + 1)
+      goal: (none)
+  end of claim: ∀ k : ℕ, 2 * ∑ i ∈ Finset.range (k + 1), i = k * (k + 1) → 2 * ∑ i ∈ Finset.range (k + 1 + 1), i = (k + 1) * (k + 1 + 1)
+-> state 6   (all goals closed)
+  premise:
+    - 2 * ∑ i ∈ Finset.range (0 + 1), i = 0 * (0 + 1)
+    - ∀ k : ℕ, 2 * ∑ i ∈ Finset.range (k + 1), i = k * (k + 1) → 2 * ∑ i ∈ Finset.range (k + 1 + 1), i = (k + 1) * (k + 1 + 1)
+  goal: (none)

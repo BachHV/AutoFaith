@@ -1,0 +1,104 @@
+theorem_id: divides_transitive
+language:   FL
+model:      openrouter/anthropic/claude-sonnet-5.5
+run at:     2026-11-17 17:59:31
+statement:  theorem divides_transitive {a b c : ℤ} (h₁ : a ∣ b) (h₂ : b ∣ c) : a ∣ c
+proof:
+    by
+      obtain ⟨m, hm⟩ := h₁
+      obtain ⟨n, hn⟩ := h₂
+      refine ⟨m * n, ?_⟩
+      rw [hn, hm]
+      ring
+
+state 0 (start)
+  premise:
+    - a : ℤ
+    - b : ℤ
+    - c : ℤ
+    - h₁ : a ∣ b
+    - h₂ : b ∣ c
+  goal:
+    - a ∣ c
+
+[1/5] state 0 -> 1: obtain ⟨m, hm⟩ := h₁
+  + premise: m : ℤ
+  + premise: hm : b = a * m
+  - premise: h₁ : a ∣ b
+  because:  a ∣ b unfolds to ∃ m, b = a * m; obtain takes the witness m and the equation hm
+  uses:     h₁
+-> state 1
+  premise:
+    - a : ℤ
+    - b : ℤ
+    - c : ℤ
+    - h₂ : b ∣ c
+    - m : ℤ
+    - hm : b = a * m
+  goal:
+    - a ∣ c
+
+[2/5] state 1 -> 2: obtain ⟨n, hn⟩ := h₂
+  + premise: n : ℤ
+  + premise: hn : c = b * n
+  - premise: h₂ : b ∣ c
+  because:  b ∣ c unfolds to ∃ n, c = b * n; obtain takes the witness n and the equation hn
+  uses:     h₂
+-> state 2
+  premise:
+    - a : ℤ
+    - b : ℤ
+    - c : ℤ
+    - m : ℤ
+    - hm : b = a * m
+    - n : ℤ
+    - hn : c = b * n
+  goal:
+    - a ∣ c
+
+[3/5] state 2 -> 3: refine ⟨m * n, ?_⟩
+  - goal:    a ∣ c   (closed)
+  + goal:    c = a * (m * n)
+  because:  a ∣ c means ∃ d, c = a * d; choose the witness d = m * n, leaving the equation as the goal
+-> state 3
+  premise:
+    - a : ℤ
+    - b : ℤ
+    - c : ℤ
+    - m : ℤ
+    - hm : b = a * m
+    - n : ℤ
+    - hn : c = b * n
+  goal:
+    - c = a * (m * n)
+
+[4/5] state 3 -> 4: rw [hn, hm]
+  - goal:    c = a * (m * n)   (closed)
+  + goal:    a * m * n = a * (m * n)
+  because:  rewrite c as b * n using hn, then b as a * m using hm
+  uses:     hm; hn
+-> state 4
+  premise:
+    - a : ℤ
+    - b : ℤ
+    - c : ℤ
+    - m : ℤ
+    - hm : b = a * m
+    - n : ℤ
+    - hn : c = b * n
+  goal:
+    - a * m * n = a * (m * n)
+
+[5/5] state 4 -> 5: ring
+  - goal:    a * m * n = a * (m * n)   (closed)
+  because:  both sides are equal by associativity of multiplication
+-> state 5   (all goals closed)
+  premise:
+    - a : ℤ
+    - b : ℤ
+    - c : ℤ
+    - m : ℤ
+    - hm : b = a * m
+    - n : ℤ
+    - hn : c = b * n
+  goal: (none)

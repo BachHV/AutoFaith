@@ -1,0 +1,137 @@
+theorem_id: square_plus_n_even_by_cases
+language:   FL
+model:      openrouter/anthropic/claude-sonnet-5.5
+run at:     2026-11-17 17:59:51
+statement:  theorem square_plus_n_even_by_cases (n : ℤ) : Even (n ^ 2 + n)
+proof:
+    by
+      rcases Int.even_or_odd n with ⟨k, hk⟩ | ⟨k, hk⟩
+      · exact ⟨2 * k ^ 2 + k, by rw [hk]; ring⟩
+      · exact ⟨2 * k ^ 2 + 3 * k + 1, by rw [hk]; ring⟩
+
+state 0 (start)
+  premise:
+    - n : ℤ
+  goal:
+    - Even (n ^ 2 + n)
+
+[1/1] state 0 -> 11: rcases Int.even_or_odd n with ⟨k, hk⟩ | ⟨k, hk⟩ · exact ⟨2 * k ^ 2 + k, by rw [hk]; ring⟩ · exact ⟨2 * k ^ 2 + 3 * k + 1, by rw [hk]; ring⟩
+  + premise: Even (n ^ 2 + n) in the case n = k + k   (proved as a claim below)
+  + premise: Even (n ^ 2 + n) in the case n = 2 * k + 1   (proved as a claim below)
+  - goal:    Even (n ^ 2 + n)   (closed)
+  because:  Int.even_or_odd n gives Even n or Odd n; destructuring each yields a witness k with n = k + k, or n = 2 * k + 1, so there are two cases
+  uses:     Int.even_or_odd
+  claim: Even (n ^ 2 + n) in the case n = k + k   assuming ['k : ℤ', 'hk : n = k + k']
+    state 1 (start)
+      premise:
+        - n : ℤ
+        - k : ℤ
+        - hk : n = k + k
+      goal:
+        - Even (n ^ 2 + n)
+
+    [1/1] state 1 -> 5: exact ⟨2 * k ^ 2 + k, by rw [hk]; ring⟩
+      + premise: n ^ 2 + n = 2 * k ^ 2 + k + (2 * k ^ 2 + k)   (proved as a claim below)
+      - goal:    Even (n ^ 2 + n)   (closed)
+      because:  Even x means ∃ r, x = r + r; take r = 2 * k ^ 2 + k, and the remaining equation is proved by the nested block
+      uses:     hk
+      claim: n ^ 2 + n = 2 * k ^ 2 + k + (2 * k ^ 2 + k)
+        state 2 (start)
+          premise:
+            - n : ℤ
+            - k : ℤ
+            - hk : n = k + k
+          goal:
+            - n ^ 2 + n = 2 * k ^ 2 + k + (2 * k ^ 2 + k)
+
+        [1/2] state 2 -> 3: rw [hk]
+          - goal:    n ^ 2 + n = 2 * k ^ 2 + k + (2 * k ^ 2 + k)   (closed)
+          + goal:    (k + k) ^ 2 + (k + k) = 2 * k ^ 2 + k + (2 * k ^ 2 + k)
+          because:  rewrite n as k + k using hk
+          uses:     hk
+        -> state 3
+          premise:
+            - n : ℤ
+            - k : ℤ
+            - hk : n = k + k
+          goal:
+            - (k + k) ^ 2 + (k + k) = 2 * k ^ 2 + k + (2 * k ^ 2 + k)
+
+        [2/2] state 3 -> 4: ring
+          - goal:    (k + k) ^ 2 + (k + k) = 2 * k ^ 2 + k + (2 * k ^ 2 + k)   (closed)
+          because:  both sides expand to 4 * k ^ 2 + 2 * k
+        -> state 4   (all goals closed)
+          premise:
+            - n : ℤ
+            - k : ℤ
+            - hk : n = k + k
+          goal: (none)
+      end of claim: n ^ 2 + n = 2 * k ^ 2 + k + (2 * k ^ 2 + k)
+    -> state 5   (all goals closed)
+      premise:
+        - n : ℤ
+        - k : ℤ
+        - hk : n = k + k
+        - n ^ 2 + n = 2 * k ^ 2 + k + (2 * k ^ 2 + k)
+      goal: (none)
+  end of claim: Even (n ^ 2 + n) in the case n = k + k
+  claim: Even (n ^ 2 + n) in the case n = 2 * k + 1   assuming ['k : ℤ', 'hk : n = 2 * k + 1']
+    state 6 (start)
+      premise:
+        - n : ℤ
+        - k : ℤ
+        - hk : n = 2 * k + 1
+      goal:
+        - Even (n ^ 2 + n)
+
+    [1/1] state 6 -> 10: exact ⟨2 * k ^ 2 + 3 * k + 1, by rw [hk]; ring⟩
+      + premise: n ^ 2 + n = 2 * k ^ 2 + 3 * k + 1 + (2 * k ^ 2 + 3 * k + 1)   (proved as a claim below)
+      - goal:    Even (n ^ 2 + n)   (closed)
+      because:  Even x means ∃ r, x = r + r; take r = 2 * k ^ 2 + 3 * k + 1, and the remaining equation is proved by the nested block
+      uses:     hk
+      claim: n ^ 2 + n = 2 * k ^ 2 + 3 * k + 1 + (2 * k ^ 2 + 3 * k + 1)
+        state 7 (start)
+          premise:
+            - n : ℤ
+            - k : ℤ
+            - hk : n = 2 * k + 1
+          goal:
+            - n ^ 2 + n = 2 * k ^ 2 + 3 * k + 1 + (2 * k ^ 2 + 3 * k + 1)
+
+        [1/2] state 7 -> 8: rw [hk]
+          - goal:    n ^ 2 + n = 2 * k ^ 2 + 3 * k + 1 + (2 * k ^ 2 + 3 * k + 1)   (closed)
+          + goal:    (2 * k + 1) ^ 2 + (2 * k + 1) = 2 * k ^ 2 + 3 * k + 1 + (2 * k ^ 2 + 3 * k + 1)
+          because:  rewrite n as 2 * k + 1 using hk
+          uses:     hk
+        -> state 8
+          premise:
+            - n : ℤ
+            - k : ℤ
+            - hk : n = 2 * k + 1
+          goal:
+            - (2 * k + 1) ^ 2 + (2 * k + 1) = 2 * k ^ 2 + 3 * k + 1 + (2 * k ^ 2 + 3 * k + 1)
+
+        [2/2] state 8 -> 9: ring
+          - goal:    (2 * k + 1) ^ 2 + (2 * k + 1) = 2 * k ^ 2 + 3 * k + 1 + (2 * k ^ 2 + 3 * k + 1)   (closed)
+          because:  both sides expand to 4 * k ^ 2 + 6 * k + 2
+        -> state 9   (all goals closed)
+          premise:
+            - n : ℤ
+            - k : ℤ
+            - hk : n = 2 * k + 1
+          goal: (none)
+      end of claim: n ^ 2 + n = 2 * k ^ 2 + 3 * k + 1 + (2 * k ^ 2 + 3 * k + 1)
+    -> state 10   (all goals closed)
+      premise:
+        - n : ℤ
+        - k : ℤ
+        - hk : n = 2 * k + 1
+        - n ^ 2 + n = 2 * k ^ 2 + 3 * k + 1 + (2 * k ^ 2 + 3 * k + 1)
+      goal: (none)
+  end of claim: Even (n ^ 2 + n) in the case n = 2 * k + 1
+-> state 11   (all goals closed)
+  premise:
+    - n : ℤ
+    - Even (n ^ 2 + n) in the case n = k + k
+    - Even (n ^ 2 + n) in the case n = 2 * k + 1
+  goal: (none)
